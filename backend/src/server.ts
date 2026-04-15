@@ -3,6 +3,7 @@ import { ApolloServer } from '@apollo/server'
 import { expressMiddleware } from '@as-integrations/express5'
 import express from 'express'
 import { buildSchema } from 'type-graphql'
+import { env } from './env.js'
 import { ExampleResolver } from './resolvers/example.resolver.js'
 
 const app = express()
@@ -21,6 +22,6 @@ await server.start()
 
 app.use('/graphql', express.json(), expressMiddleware(server))
 
-app.listen(4000, () => {
-  console.log('Servidor iniciado na porta 4000')
+app.listen(env.PORT, () => {
+  console.log(`Server running at http://localhost:${env.PORT}/graphql`)
 })
