@@ -4,12 +4,13 @@ import { expressMiddleware } from '@as-integrations/express5'
 import express from 'express'
 import { buildSchema } from 'type-graphql'
 import { env } from './env.js'
+import { AuthResolver } from './resolvers/auth.resolver.js'
 import { ExampleResolver } from './resolvers/example.resolver.js'
 
 const app = express()
 
 const schema = await buildSchema({
-  resolvers: [ExampleResolver],
+  resolvers: [ExampleResolver, AuthResolver],
   validate: false,
   emitSchemaFile: './schema.graphql'
 })

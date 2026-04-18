@@ -5,8 +5,8 @@ Este documento descreve as etapas de desenvolvimento do backend do Financy, com 
 ## Etapa 1: Autenticação e Gestão de Usuários
 **Estimativa: 3 a 4 dias**
 
-- [ ] **Implementar Registro de Usuários**: Criar resolver para cadastro de novos usuários com criptografia de senha (bcrypt) e validação de dados. (1 dia)
-- [ ] **Implementar Fluxo de Login**: Desenvolver a lógica de autenticação e geração de tokens JWT para sessões seguras. (1 dia)
+- [X] **Implementar Registro de Usuários**: Criar resolver para cadastro de novos usuários com criptografia de senha (bcrypt) e validação de dados. (1 dia)
+- [X] **Implementar Fluxo de Login**: Desenvolver a lógica de autenticação e geração de tokens JWT para sessões seguras. (1 dia)
 - [ ] **Integração de Contexto**: Configurar o Apollo Server para extrair o usuário do token JWT e disponibilizá-lo no `context` de todos os resolvers. (1 a 2 dias)
 
 ## Etapa 2: Gestão de Categorias
