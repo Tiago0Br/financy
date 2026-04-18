@@ -4,6 +4,7 @@ import { expressMiddleware } from '@as-integrations/express5'
 import express from 'express'
 import { buildSchema } from 'type-graphql'
 import { env } from './env.js'
+import { buildContext } from './graphql/context/index.js'
 import { AuthResolver } from './resolvers/auth.resolver.js'
 import { ExampleResolver } from './resolvers/example.resolver.js'
 
@@ -21,7 +22,13 @@ const server = new ApolloServer({
 
 await server.start()
 
-app.use('/graphql', express.json(), expressMiddleware(server))
+app.use(
+  '/graphql',
+  express.json(),
+  expressMiddleware(server, {
+    context: buildContext
+  })
+)
 
 app.listen(env.PORT, () => {
   console.log(`Server running at http://localhost:${env.PORT}/graphql`)
