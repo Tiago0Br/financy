@@ -6,12 +6,12 @@ import { buildSchema } from 'type-graphql'
 import { env } from './env.js'
 import { buildContext } from './graphql/context/index.js'
 import { AuthResolver } from './resolvers/auth.resolver.js'
-import { ExampleResolver } from './resolvers/example.resolver.js'
+import { CategoryResolver } from './resolvers/category.resolver.js'
 
 const app = express()
 
 const schema = await buildSchema({
-  resolvers: [ExampleResolver, AuthResolver],
+  resolvers: [AuthResolver, CategoryResolver],
   validate: false,
   emitSchemaFile: './schema.graphql'
 })

@@ -7,14 +7,14 @@ Este documento descreve as etapas de desenvolvimento do backend do Financy, com 
 
 - [X] **Implementar Registro de Usuários**: Criar resolver para cadastro de novos usuários com criptografia de senha (bcrypt) e validação de dados. (1 dia)
 - [X] **Implementar Fluxo de Login**: Desenvolver a lógica de autenticação e geração de tokens JWT para sessões seguras. (1 dia)
-- [ ] **Integração de Contexto**: Configurar o Apollo Server para extrair o usuário do token JWT e disponibilizá-lo no `context` de todos os resolvers. (1 a 2 dias)
+- [X] **Integração de Contexto**: Configurar o Apollo Server para extrair o usuário do token JWT e disponibilizá-lo no `context` de todos os resolvers. (1 a 2 dias)
 
 ## Etapa 2: Gestão de Categorias
 **Estimativa: 2 a 3 dias**
 
-- [ ] **Modelagem de Dados**: Criar o modelo `Category` no Prisma com relacionamento com o `User`. (0.5 dia)
-- [ ] **CRUD de Categorias**: Implementar as operações de criação, edição, exclusão e listagem de categorias. (1.5 a 2 dias)
-- [ ] **Isolamento de Categorias**: Garantir que um usuário não consiga ver ou modificar categorias criadas por outros usuários. (0.5 dia)
+- [X] **Modelagem de Dados**: Criar o modelo `Category` no Prisma com relacionamento com o `User`. (0.5 dia)
+- [X] **CRUD de Categorias**: Implementar as operações de criação, edição, exclusão e listagem de categorias. (1.5 a 2 dias)
+- [X] **Isolamento de Categorias**: Garantir que um usuário não consiga ver ou modificar categorias criadas por outros usuários. (0.5 dia)
 
 ## Etapa 3: Gestão de Transações
 **Estimativa: 3 a 5 dias**
