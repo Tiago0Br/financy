@@ -1,4 +1,5 @@
 import type { LoginInput, RegisterInput } from '@/dtos/input/auth.input.js'
+import { env } from '@/env.js'
 import type { User } from '@/generated/prisma/client.js'
 import { prisma } from '@/lib/prisma.js'
 import { comparePassword, hashPassword } from '@/utils/hash.js'
@@ -58,7 +59,7 @@ export class AuthService {
         id: user.id,
         email: user.email
       },
-      '1d'
+      env.TOKEN_EXPIRES_IN
     )
 
     const refreashToken = signJwt(
@@ -66,7 +67,7 @@ export class AuthService {
         id: user.id,
         email: user.email
       },
-      '1d'
+      env.REFREASH_TOKEN_EXPIRES_IN
     )
 
     return {

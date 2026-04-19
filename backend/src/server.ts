@@ -1,6 +1,7 @@
 import 'reflect-metadata'
 import { ApolloServer } from '@apollo/server'
 import { expressMiddleware } from '@as-integrations/express5'
+import cors from 'cors'
 import express from 'express'
 import { buildSchema } from 'type-graphql'
 import { env } from './env.js'
@@ -10,6 +11,12 @@ import { CategoryResolver } from './resolvers/category.resolver.js'
 import { TransactionResolver } from './resolvers/transaction.resolver.js'
 
 const app = express()
+
+app.use(
+  cors({
+    origin: env.FRONTEND_URL
+  })
+)
 
 const schema = await buildSchema({
   resolvers: [AuthResolver, CategoryResolver, TransactionResolver],
