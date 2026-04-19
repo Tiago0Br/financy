@@ -19,7 +19,7 @@ Este documento descreve as etapas de desenvolvimento do backend do Financy, com 
 ## Etapa 3: Gestão de Transações
 **Estimativa: 3 a 5 dias**
 
-- [ ] **Modelagem de Transações**: Criar o modelo `Transaction` vinculado a um `User` e a uma `Category`. (1 dia)
+- [X] **Modelagem de Transações**: Criar o modelo `Transaction` vinculado a um `User` e a uma `Category`. (1 dia)
 - [ ] **CRUD de Transações**: Implementar resolvers para criar, editar, excluir e listar transações. (2 dias)
 - [ ] **Filtros e Listagem Avançada**: Adicionar filtros por data, categoria e tipo (receita/despesa) na listagem de transações. (1 a 2 dias)
 
