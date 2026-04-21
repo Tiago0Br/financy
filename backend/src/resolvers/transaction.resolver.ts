@@ -9,6 +9,7 @@ import {
 } from 'type-graphql'
 import {
   CreateTransactionInput,
+  FindTransactionsInput,
   UpdateTransactionInput
 } from '@/dtos/input/transaction.input.js'
 import type { User } from '@/generated/prisma/client.js'
@@ -43,8 +44,11 @@ export class TransactionResolver {
   }
 
   @Query(() => [TransactionModel])
-  async listTransactions(@GqlUser() user: User) {
-    return this.transactionService.list(user.id)
+  async listTransactions(
+    @Arg('data', () => FindTransactionsInput) data: FindTransactionsInput,
+    @GqlUser() user: User
+  ) {
+    return this.transactionService.findMany(data, user.id)
   }
 
   @Query(() => TransactionModel)

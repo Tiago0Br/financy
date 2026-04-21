@@ -35,6 +35,12 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTimeISO
 
+input FindTransactionsInput {
+  categoryId: String
+  description: String
+  type: TransactionType
+}
+
 input LoginInput {
   email: String!
   password: String!
@@ -61,7 +67,7 @@ type Query {
   getCategoryById(id: String!): CategoryModel!
   getTransactionByID(id: String!): TransactionModel!
   listCategories: [CategoryModel!]!
-  listTransactions: [TransactionModel!]!
+  listTransactions(data: FindTransactionsInput!): [TransactionModel!]!
 }
 
 input RegisterInput {

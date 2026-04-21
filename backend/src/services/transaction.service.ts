@@ -1,5 +1,6 @@
 import type {
   CreateTransactionInput,
+  FindTransactionsInput,
   UpdateTransactionInput
 } from '@/dtos/input/transaction.input.js'
 import { prisma } from '@/lib/prisma.js'
@@ -18,9 +19,16 @@ export class TransactionService {
     })
   }
 
-  async list(userId: string) {
+  async findMany(filters: FindTransactionsInput, userId: string) {
     return prisma.transaction.findMany({
-      where: { userId }
+      where: {
+        userId,
+        description: {
+          contains: filters.description
+        },
+        type: filters.type,
+        categoryId: filters.categoryId
+      }
     })
   }
 

@@ -39,3 +39,15 @@ export class UpdateTransactionInput {
   @Field(() => String, { nullable: true })
   categoryId?: string
 }
+
+@InputType()
+export class FindTransactionsInput {
+  @Field(() => String, { nullable: true })
+  description?: string
+
+  @Field(() => TransactionType, { nullable: true })
+  type?: TransactionType
+
+  @Field(() => String, { nullable: true })
+  categoryId?: string
+}
