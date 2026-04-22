@@ -5,5 +5,5 @@ export const Route = createFileRoute('/')({
 })
 
 function IndexPage() {
-  return <h1 className="text-blue-500 text-4xl">Financy</h1>
+  return <h1 className="text-4xl text-blue-base">Financy</h1>
 }
