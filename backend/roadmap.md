@@ -21,11 +21,11 @@ Este documento descreve as etapas de desenvolvimento do backend do Financy, com 
 
 - [X] **Modelagem de Transações**: Criar o modelo `Transaction` vinculado a um `User` e a uma `Category`. (1 dia)
 - [X] **CRUD de Transações**: Implementar resolvers para criar, editar, excluir e listar transações. (2 dias)
-- [ ] **Filtros e Listagem Avançada**: Adicionar filtros por data, categoria e tipo (receita/despesa) na listagem de transações. (1 a 2 dias)
+- [X] **Filtros e Listagem Avançada**: Adicionar filtros por data, categoria e tipo (receita/despesa) na listagem de transações. (1 a 2 dias)
 
 ## Etapa 4: Segurança e Refinamento
 **Estimativa: 2 a 3 dias**
 
+- [X] **Isolamento Global de Dados**: Revisão de segurança para garantir que todas as queries e mutations filtrem dados pelo `userId` do contexto. (1 dia)
 - [ ] **Validação de Inputs**: Integrar Zod em todos os DTOs de entrada para garantir a integridade dos dados enviados pelo frontend. (1 dia)
-- [ ] **Isolamento Global de Dados**: Revisão de segurança para garantir que todas as queries e mutations filtrem dados pelo `userId` do contexto. (1 dia)
 - [ ] **Tratamento de Erros**: Padronizar as mensagens de erro do GraphQL para facilitar o consumo pela interface. (1 dia)

@@ -1,3 +1,4 @@
+import { endOfMonth, startOfMonth } from 'date-fns'
 import type {
   CreateTransactionInput,
   FindTransactionsInput,
@@ -20,14 +21,28 @@ export class TransactionService {
   }
 
   async findMany(filters: FindTransactionsInput, userId: string) {
+    const { month, year, description, type, categoryId } = filters
+
+    let dateRange = {}
+
+    if (month && year) {
+      const date = new Date(year, month - 1)
+
+      dateRange = {
+        gte: startOfMonth(date),
+        lte: endOfMonth(date)
+      }
+    }
+
     return prisma.transaction.findMany({
       where: {
         userId,
         description: {
-          contains: filters.description
+          contains: description
         },
-        type: filters.type,
-        categoryId: filters.categoryId
+        type: type,
+        categoryId: categoryId,
+        date: dateRange
       }
     })
   }

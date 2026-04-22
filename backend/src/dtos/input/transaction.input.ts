@@ -50,4 +50,10 @@ export class FindTransactionsInput {
 
   @Field(() => String, { nullable: true })
   categoryId?: string
+
+  @Field(() => Number, { nullable: true })
+  month?: number
+
+  @Field(() => Number, { nullable: true })
+  year?: number
 }
