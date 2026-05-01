@@ -1,9 +1,11 @@
-import type { ComponentProps, ElementType } from 'react'
+import { EyeClosedIcon, EyeIcon } from 'lucide-react'
+import { type ComponentProps, type ElementType, useState } from 'react'
 
 interface InputProps extends ComponentProps<'input'> {
   label: string
   icon: ElementType
   error?: string
+  hint?: string
   isFilled?: boolean
 }
 
@@ -11,12 +13,23 @@ export function Input({
   label,
   icon: Icon,
   error,
+  hint,
   isFilled = false,
   id,
   disabled,
+  type,
   className = '',
   ...props
 }: InputProps) {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
+
+  const isPassword = type === 'password'
+  const inputType = isPassword && isPasswordVisible ? 'text' : type
+
+  function handleTogglePasswordVisibility() {
+    setIsPasswordVisible((prev) => !prev)
+  }
+
   return (
     <div className={`flex flex-col gap-2 group ${className}`}>
       <label
@@ -52,14 +65,34 @@ export function Input({
         <input
           id={id}
           disabled={disabled}
+          type={inputType}
           className={`flex-1 placeholder:text-gray-400 outline-none transition-colors bg-transparent ${
             disabled ? 'text-gray-400' : 'text-gray-800'
           }`}
           {...props}
         />
+
+        {isPassword && (
+          <button
+            type="button"
+            onClick={handleTogglePasswordVisibility}
+            className="text-gray-400 hover:text-gray-600 focus:outline-none"
+            disabled={disabled}
+          >
+            {isPasswordVisible ? (
+              <EyeIcon className="size-4 text-gray-700 cursor-pointer" />
+            ) : (
+              <EyeClosedIcon className="size-4 text-gray-700 cursor-pointer" />
+            )}
+          </button>
+        )}
       </div>
 
-      {error && <span className="text-xs text-danger">{error}</span>}
+      {error ? (
+        <span className="text-xs text-danger">{error}</span>
+      ) : (
+        hint && <span className="text-xs text-gray-500">{hint}</span>
+      )}
     </div>
   )
 }

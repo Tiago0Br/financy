@@ -116,6 +116,7 @@ function RegisterPage() {
               disabled={isLoading}
               isFilled={!!passwordValue}
               placeholder="Digite sua senha"
+              hint="A senha deve ter no mínimo 8 caracteres"
               {...register('password')}
             />
           </div>
