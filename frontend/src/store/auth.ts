@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { apolloClient } from '@/lib/graphql/apollo'
 import { LOGIN } from '@/lib/graphql/mutations/login'
+import { REGISTER } from '@/lib/graphql/mutations/register'
 
 interface User {
   id: string
@@ -16,8 +17,22 @@ interface LoginInput {
   password: string
 }
 
-type LoginMutationData = {
+interface LoginMutationData {
   login: {
+    token: string
+    refreshToken: string
+    user: User
+  }
+}
+
+interface RegisterInput {
+  name: string
+  email: string
+  password: string
+}
+
+interface RegisterMutationData {
+  register: {
     token: string
     refreshToken: string
     user: User
@@ -28,6 +43,7 @@ interface AuthState {
   user: User | null
   token: string | null
   isAuthenticated: boolean
+  register: (data: RegisterInput) => Promise<boolean>
   login: (data: LoginInput) => Promise<boolean>
   logout: () => void
 }
@@ -38,7 +54,7 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       isAuthenticated: false,
-      login: async (loginData: LoginInput) => {
+      async login(loginData: LoginInput) {
         try {
           const { data } = await apolloClient.mutate<
             LoginMutationData,
@@ -71,6 +87,42 @@ export const useAuthStore = create<AuthState>()(
           return false
         } catch (error) {
           console.log('Erro ao fazer o login')
+          throw error
+        }
+      },
+      async register(registerData: RegisterInput) {
+        try {
+          const { data } = await apolloClient.mutate<
+            RegisterMutationData,
+            { data: RegisterInput }
+          >({
+            mutation: REGISTER,
+            variables: {
+              data: {
+                name: registerData.name,
+                email: registerData.email,
+                password: registerData.password
+              }
+            }
+          })
+          if (data?.register) {
+            const { token, user } = data.register
+            set({
+              user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt
+              },
+              token,
+              isAuthenticated: true
+            })
+            return true
+          }
+          return false
+        } catch (error) {
+          console.log('Erro ao fazer o cadastro')
           throw error
         }
       },
