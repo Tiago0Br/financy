@@ -1,10 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { LockIcon, MailIcon, UserRoundPlusIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import z from 'zod/v3'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { LinkButton } from '@/components/ui/link-button'
 import { useAuthStore } from '@/store/auth'
 
 export const Route = createFileRoute('/login/')({
@@ -76,97 +79,29 @@ function LoginPage() {
 
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
-            <div className="flex flex-col gap-2 group">
-              <label
-                htmlFor="email"
-                className={`text-sm transition-colors ${
-                  errors.email
-                    ? 'text-danger'
-                    : 'text-gray-700 group-focus-within:text-brand-base'
-                }`}
-              >
-                E-mail
-              </label>
-              <div
-                className={`p-2.5 flex items-center gap-2 rounded-lg border transition-colors ${
-                  errors.email
-                    ? 'border-danger'
-                    : 'border-gray-300 group-focus-within:border-brand-base'
-                }`}
-              >
-                <MailIcon
-                  className={`size-4 transition-colors ${
-                    isLoading
-                      ? 'text-gray-400'
-                      : errors.email
-                        ? 'text-danger'
-                        : emailValue
-                          ? 'text-gray-800 group-focus-within:text-brand-base'
-                          : 'text-gray-400 group-focus-within:text-brand-base'
-                  }`}
-                />
-                <input
-                  {...register('email')}
-                  id="email"
-                  placeholder="mail@exemplo.com"
-                  className={`flex-1 placeholder:text-gray-400 outline-none transition-colors ${
-                    isLoading ? 'text-gray-400' : 'text-gray-800'
-                  }`}
-                  disabled={isLoading}
-                />
-              </div>
-              {errors.email && (
-                <span className="text-xs text-danger">
-                  {errors.email.message}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col gap-2 group">
-              <label
-                htmlFor="password"
-                className={`text-sm transition-colors ${
-                  errors.password
-                    ? 'text-danger'
-                    : 'text-gray-700 group-focus-within:text-brand-base'
-                }`}
-              >
-                Senha
-              </label>
-              <div
-                className={`p-2.5 flex items-center gap-2 rounded-lg border transition-colors ${
-                  errors.password
-                    ? 'border-danger'
-                    : 'border-gray-300 group-focus-within:border-brand-base'
-                }`}
-              >
-                <LockIcon
-                  className={`size-4 transition-colors ${
-                    isLoading
-                      ? 'text-gray-400'
-                      : errors.password
-                        ? 'text-danger'
-                        : passwordValue
-                          ? 'text-gray-800 group-focus-within:text-brand-base'
-                          : 'text-gray-400 group-focus-within:text-brand-base'
-                  }`}
-                />
-                <input
-                  {...register('password')}
-                  id="password"
-                  type="password"
-                  placeholder="Digite sua senha"
-                  className={`flex-1 placeholder:text-gray-400 outline-none transition-colors ${
-                    isLoading ? 'text-gray-400' : 'text-gray-800'
-                  }`}
-                  disabled={isLoading}
-                />
-              </div>
-              {errors.password && (
-                <span className="text-xs text-danger">
-                  {errors.password.message}
-                </span>
-              )}
-            </div>
+            <Input
+              label="E-mail"
+              icon={MailIcon}
+              id="email"
+              error={errors.email?.message}
+              disabled={isLoading}
+              isFilled={!!emailValue}
+              placeholder="mail@exemplo.com"
+              {...register('email')}
+            />
+
+            <Input
+              label="Senha"
+              icon={LockIcon}
+              id="password"
+              type="password"
+              error={errors.password?.message}
+              disabled={isLoading}
+              isFilled={!!passwordValue}
+              placeholder="Digite sua senha"
+              {...register('password')}
+            />
+
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
                 <input
@@ -185,13 +120,9 @@ function LoginPage() {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full py-2 bg-brand-base text-white rounded-md cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={isLoading}
-          >
+          <Button type="submit" isLoading={isLoading}>
             Entrar
-          </button>
+          </Button>
 
           <div className="flex items-center gap-3">
             <div className="flex-1 h-0 w-10 border-t border-gray-300" />
@@ -204,13 +135,9 @@ function LoginPage() {
               Ainda não tem uma conta?
             </span>
 
-            <Link
-              to="/register"
-              className="w-full rounded-md border border-gray-300 cursor-pointer py-2 flex justify-center items-center gap-2 text-gray-700"
-            >
-              <UserRoundPlusIcon className="size-4.5" />
+            <LinkButton to="/register" icon={UserRoundPlusIcon}>
               Criar conta
-            </Link>
+            </LinkButton>
           </div>
         </form>
       </div>
