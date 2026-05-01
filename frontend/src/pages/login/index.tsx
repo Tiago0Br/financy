@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { LockIcon, MailIcon, UserRoundPlusIcon } from 'lucide-react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import z from 'zod/v3'
@@ -21,9 +22,15 @@ const loginSchema = z.object({
 type LoginSchema = z.infer<typeof loginSchema>
 
 function LoginPage() {
+  const [isLoading, setIsLoading] = useState(false)
   const login = useAuthStore((state) => state.login)
 
-  const { register, handleSubmit } = useForm<LoginSchema>({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
@@ -31,8 +38,12 @@ function LoginPage() {
     }
   })
 
+  const emailValue = watch('email')
+  const passwordValue = watch('password')
+
   async function onSubmit({ email, password }: LoginSchema) {
     try {
+      setIsLoading(true)
       const isLogged = await login({
         email,
         password
@@ -46,6 +57,8 @@ function LoginPage() {
     } catch (error) {
       toast.error('Credenciais inválidas!')
       console.error(error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -63,34 +76,96 @@ function LoginPage() {
 
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
-            <div className="flex flex-col gap-2">
-              <label htmlFor="email" className="text-sm text-gray-700">
+            <div className="flex flex-col gap-2 group">
+              <label
+                htmlFor="email"
+                className={`text-sm transition-colors ${
+                  errors.email
+                    ? 'text-danger'
+                    : 'text-gray-700 group-focus-within:text-brand-base'
+                }`}
+              >
                 E-mail
               </label>
-              <div className="p-2.5 flex items-center gap-2 rounded-lg border border-gray-300">
-                <MailIcon className="size-4 text-gray-400" />
+              <div
+                className={`p-2.5 flex items-center gap-2 rounded-lg border transition-colors ${
+                  errors.email
+                    ? 'border-danger'
+                    : 'border-gray-300 group-focus-within:border-brand-base'
+                }`}
+              >
+                <MailIcon
+                  className={`size-4 transition-colors ${
+                    isLoading
+                      ? 'text-gray-400'
+                      : errors.email
+                        ? 'text-danger'
+                        : emailValue
+                          ? 'text-gray-800 group-focus-within:text-brand-base'
+                          : 'text-gray-400 group-focus-within:text-brand-base'
+                  }`}
+                />
                 <input
                   {...register('email')}
                   id="email"
                   placeholder="mail@exemplo.com"
-                  className="flex-1 placeholder:text-gray-400 outline-none text-gray-800"
+                  className={`flex-1 placeholder:text-gray-400 outline-none transition-colors ${
+                    isLoading ? 'text-gray-400' : 'text-gray-800'
+                  }`}
+                  disabled={isLoading}
                 />
               </div>
+              {errors.email && (
+                <span className="text-xs text-danger">
+                  {errors.email.message}
+                </span>
+              )}
             </div>
-            <div className="flex flex-col gap-2">
-              <label htmlFor="password" className="text-sm text-gray-700">
+            <div className="flex flex-col gap-2 group">
+              <label
+                htmlFor="password"
+                className={`text-sm transition-colors ${
+                  errors.password
+                    ? 'text-danger'
+                    : 'text-gray-700 group-focus-within:text-brand-base'
+                }`}
+              >
                 Senha
               </label>
-              <div className="p-2.5 flex items-center gap-2 rounded-lg border border-gray-300">
-                <LockIcon className="size-4 text-gray-400" />
+              <div
+                className={`p-2.5 flex items-center gap-2 rounded-lg border transition-colors ${
+                  errors.password
+                    ? 'border-danger'
+                    : 'border-gray-300 group-focus-within:border-brand-base'
+                }`}
+              >
+                <LockIcon
+                  className={`size-4 transition-colors ${
+                    isLoading
+                      ? 'text-gray-400'
+                      : errors.password
+                        ? 'text-danger'
+                        : passwordValue
+                          ? 'text-gray-800 group-focus-within:text-brand-base'
+                          : 'text-gray-400 group-focus-within:text-brand-base'
+                  }`}
+                />
                 <input
                   {...register('password')}
                   id="password"
                   type="password"
                   placeholder="Digite sua senha"
-                  className="flex-1 placeholder:text-gray-400 outline-none text-gray-800"
+                  className={`flex-1 placeholder:text-gray-400 outline-none transition-colors ${
+                    isLoading ? 'text-gray-400' : 'text-gray-800'
+                  }`}
+                  disabled={isLoading}
                 />
               </div>
+              {errors.password && (
+                <span className="text-xs text-danger">
+                  {errors.password.message}
+                </span>
+              )}
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
@@ -112,7 +187,8 @@ function LoginPage() {
 
           <button
             type="submit"
-            className="w-full py-2 bg-brand-base text-white rounded-md cursor-pointer"
+            className="w-full py-2 bg-brand-base text-white rounded-md cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={isLoading}
           >
             Entrar
           </button>
