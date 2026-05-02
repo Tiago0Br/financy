@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createFileRoute } from '@tanstack/react-router'
-import { LockIcon, LogInIcon, MailIcon, UserIcon } from 'lucide-react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { LockIcon, MailIcon, UserRoundPlusIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -10,61 +10,67 @@ import { Input } from '@/components/ui/input'
 import { LinkButton } from '@/components/ui/link-button'
 import { useAuthStore } from '@/store/auth'
 
-export const Route = createFileRoute('/register/')({
-  component: RegisterPage
+type LoginSearch = {
+  redirect?: string
+}
+
+export const Route = createFileRoute('/_auth/login/')({
+  validateSearch: (search: Record<string, unknown>): LoginSearch => {
+    return {
+      redirect: search.redirect as string | undefined
+    }
+  },
+  component: LoginPage
 })
 
-const registerSchema = z.object({
-  name: z.string().nonempty({ message: 'O nome deve ser informado' }),
+const loginSchema = z.object({
   email: z
     .string()
     .email({ message: 'E-mail inválido' })
-    .nonempty({ message: 'O e-mail deve ser informado' }),
-  password: z
-    .string()
-    .min(8, { message: 'A senha deve ter no mínimo 8 caracteres' })
+    .nonempty({ message: 'O nome deve ser informado' }),
+  password: z.string().nonempty('A senha deve ser informada')
 })
 
-type RegisterSchema = z.infer<typeof registerSchema>
+type LoginSchema = z.infer<typeof loginSchema>
 
-function RegisterPage() {
+function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
-  const registerUser = useAuthStore((state) => state.register)
+  const login = useAuthStore((state) => state.login)
+  const navigate = useNavigate()
+  const { redirect } = Route.useSearch()
 
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors }
-  } = useForm<RegisterSchema>({
-    resolver: zodResolver(registerSchema),
+  } = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
-      name: '',
       email: '',
       password: ''
     }
   })
 
-  const nameValue = watch('name')
   const emailValue = watch('email')
   const passwordValue = watch('password')
 
-  async function onSubmit({ name, email, password }: RegisterSchema) {
+  async function onSubmit({ email, password }: LoginSchema) {
     try {
       setIsLoading(true)
-      const isRegistered = await registerUser({
-        name,
+      const isLogged = await login({
         email,
         password
       })
 
-      if (isRegistered) {
-        toast.success('Conta criada com sucesso!')
+      if (isLogged) {
+        toast.success('Login efetuado com sucesso!')
+        navigate({ to: redirect || '/' })
       } else {
-        toast.error('Erro ao tentar criar conta')
+        toast.error('Erro ao tentar fazer login')
       }
     } catch (error) {
-      toast.error('Ocorreu um erro ao criar sua conta.')
+      toast.error('Credenciais inválidas!')
       console.error(error)
     } finally {
       setIsLoading(false)
@@ -77,25 +83,14 @@ function RegisterPage() {
 
       <div className="w-full max-w-md bg-white p-8 rounded-lg border border-gray-200 space-y-8">
         <div className="flex flex-col gap-1 items-center">
-          <h1 className="text-xl text-gray-800 font-semibold">Criar conta</h1>
+          <h1 className="text-xl text-gray-800 font-semibold">Fazer login</h1>
           <span className="text-base text-gray-600">
-            Preencha os dados para começar
+            Entre na sua conta para continuar
           </span>
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
-            <Input
-              label="Nome completo"
-              icon={UserIcon}
-              id="name"
-              error={errors.name?.message}
-              disabled={isLoading}
-              isFilled={!!nameValue}
-              placeholder="Seu nome completo"
-              {...register('name')}
-            />
-
             <Input
               label="E-mail"
               icon={MailIcon}
@@ -116,13 +111,29 @@ function RegisterPage() {
               disabled={isLoading}
               isFilled={!!passwordValue}
               placeholder="Digite sua senha"
-              hint="A senha deve ter no mínimo 8 caracteres"
               {...register('password')}
             />
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1">
+                <input
+                  type="checkbox"
+                  id="recovery-password"
+                  name="recovery-password"
+                />
+                <label
+                  htmlFor="recovery-password"
+                  className="text-sm text-gray-700"
+                >
+                  Lembrar-me
+                </label>
+              </div>
+              <span className="text-brand-base text-sm">Recuperar senha</span>
+            </div>
           </div>
 
           <Button type="submit" isLoading={isLoading}>
-            Cadastrar
+            Entrar
           </Button>
 
           <div className="flex items-center gap-3">
@@ -132,10 +143,12 @@ function RegisterPage() {
           </div>
 
           <div className="flex flex-col items-center gap-2">
-            <span className="text-sm text-gray-600">Já tem uma conta?</span>
+            <span className="text-sm text-gray-600">
+              Ainda não tem uma conta?
+            </span>
 
-            <LinkButton to="/login" icon={LogInIcon}>
-              Fazer login
+            <LinkButton to="/register" icon={UserRoundPlusIcon}>
+              Criar conta
             </LinkButton>
           </div>
         </form>
