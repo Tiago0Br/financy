@@ -16,7 +16,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      className={`w-full py-2 bg-brand-base text-white rounded-md cursor-pointer flex items-center justify-center gap-2 transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+      className={`w-full p-2 bg-brand-base text-white rounded-lg cursor-pointer flex items-center justify-center gap-2 transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
       disabled={disabled || isLoading}
       {...props}
     >
