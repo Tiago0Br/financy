@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './pages/__root'
 import { Route as ProtectedRouteImport } from './pages/_protected'
 import { Route as AuthRouteImport } from './pages/_auth'
 import { Route as ProtectedIndexRouteImport } from './pages/_protected/index'
+import { Route as ProtectedTransactionsIndexRouteImport } from './pages/_protected/transactions/index'
+import { Route as ProtectedCategoriesIndexRouteImport } from './pages/_protected/categories/index'
 import { Route as AuthRegisterIndexRouteImport } from './pages/_auth/register/index'
 import { Route as AuthLoginIndexRouteImport } from './pages/_auth/login/index'
 
@@ -28,6 +30,18 @@ const ProtectedIndexRoute = ProtectedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedTransactionsIndexRoute =
+  ProtectedTransactionsIndexRouteImport.update({
+    id: '/transactions/',
+    path: '/transactions/',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedCategoriesIndexRoute =
+  ProtectedCategoriesIndexRouteImport.update({
+    id: '/categories/',
+    path: '/categories/',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const AuthRegisterIndexRoute = AuthRegisterIndexRouteImport.update({
   id: '/register/',
   path: '/register/',
@@ -43,11 +57,15 @@ export interface FileRoutesByFullPath {
   '/': typeof ProtectedIndexRoute
   '/login/': typeof AuthLoginIndexRoute
   '/register/': typeof AuthRegisterIndexRoute
+  '/categories/': typeof ProtectedCategoriesIndexRoute
+  '/transactions/': typeof ProtectedTransactionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof ProtectedIndexRoute
   '/login': typeof AuthLoginIndexRoute
   '/register': typeof AuthRegisterIndexRoute
+  '/categories': typeof ProtectedCategoriesIndexRoute
+  '/transactions': typeof ProtectedTransactionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -56,12 +74,14 @@ export interface FileRoutesById {
   '/_protected/': typeof ProtectedIndexRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
   '/_auth/register/': typeof AuthRegisterIndexRoute
+  '/_protected/categories/': typeof ProtectedCategoriesIndexRoute
+  '/_protected/transactions/': typeof ProtectedTransactionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login/' | '/register/'
+  fullPaths: '/' | '/login/' | '/register/' | '/categories/' | '/transactions/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register'
+  to: '/' | '/login' | '/register' | '/categories' | '/transactions'
   id:
     | '__root__'
     | '/_auth'
@@ -69,6 +89,8 @@ export interface FileRouteTypes {
     | '/_protected/'
     | '/_auth/login/'
     | '/_auth/register/'
+    | '/_protected/categories/'
+    | '/_protected/transactions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -97,6 +119,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof ProtectedIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/transactions/': {
+      id: '/_protected/transactions/'
+      path: '/transactions'
+      fullPath: '/transactions/'
+      preLoaderRoute: typeof ProtectedTransactionsIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/categories/': {
+      id: '/_protected/categories/'
+      path: '/categories'
+      fullPath: '/categories/'
+      preLoaderRoute: typeof ProtectedCategoriesIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_auth/register/': {
@@ -130,10 +166,14 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface ProtectedRouteChildren {
   ProtectedIndexRoute: typeof ProtectedIndexRoute
+  ProtectedCategoriesIndexRoute: typeof ProtectedCategoriesIndexRoute
+  ProtectedTransactionsIndexRoute: typeof ProtectedTransactionsIndexRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedIndexRoute: ProtectedIndexRoute,
+  ProtectedCategoriesIndexRoute: ProtectedCategoriesIndexRoute,
+  ProtectedTransactionsIndexRoute: ProtectedTransactionsIndexRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
