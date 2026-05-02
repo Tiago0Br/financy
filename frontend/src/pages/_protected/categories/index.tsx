@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CategoryCard } from '@/components/ui/category-card'
+import { CategoryModal } from '@/components/ui/category-modal'
 import { SummaryCard } from '@/components/ui/summary-card'
 
 export const Route = createFileRoute('/_protected/categories/')({
@@ -26,7 +27,10 @@ function CategoriesPage() {
         </div>
 
         <div>
-          <Button icon={PlusIcon}>Nova categoria</Button>
+          <CategoryModal
+            onSubmit={(data) => console.log(data)}
+            trigger={<Button icon={PlusIcon}>Nova categoria</Button>}
+          />
         </div>
       </div>
 

@@ -3,7 +3,7 @@ import { type ComponentProps, type ElementType, useState } from 'react'
 
 interface InputProps extends ComponentProps<'input'> {
   label: string
-  icon: ElementType
+  icon?: ElementType
   error?: string
   hint?: string
   isFilled?: boolean
@@ -50,17 +50,19 @@ export function Input({
             : 'border-gray-300 group-focus-within:border-brand-base'
         }`}
       >
-        <Icon
-          className={`size-4 transition-colors ${
-            disabled
-              ? 'text-gray-400'
-              : error
-                ? 'text-danger'
-                : isFilled
-                  ? 'text-gray-800 group-focus-within:text-brand-base'
-                  : 'text-gray-400 group-focus-within:text-brand-base'
-          }`}
-        />
+        {Icon && (
+          <Icon
+            className={`size-4 transition-colors ${
+              disabled
+                ? 'text-gray-400'
+                : error
+                  ? 'text-danger'
+                  : isFilled
+                    ? 'text-gray-800 group-focus-within:text-brand-base'
+                    : 'text-gray-400 group-focus-within:text-brand-base'
+            }`}
+          />
+        )}
 
         <input
           id={id}
