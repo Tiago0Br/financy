@@ -9,9 +9,15 @@ export const CREATE_CATEGORY = gql`
 `
 
 export const UPDATE_CATEGORY = gql`
-  mutation UpdateComment($data: UpdateCategoryInput!){
+  mutation UpdateCategory($data: UpdateCategoryInput!){
     updateCategory(data: $data){
       id
     }
+  }
+`
+
+export const DELETE_CATEGORY = gql`
+  mutation DeleteCategory($id: String!){
+    deleteCategory(id: $id)
   }
 `

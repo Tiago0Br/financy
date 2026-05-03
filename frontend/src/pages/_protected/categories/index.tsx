@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { SummaryCard } from '@/components/ui/summary-card'
 import {
   CREATE_CATEGORY,
+  DELETE_CATEGORY,
   UPDATE_CATEGORY
 } from '@/lib/graphql/mutations/category'
 import { LIST_CATEGORIES } from '@/lib/graphql/queries/category'
@@ -60,6 +61,8 @@ function CategoriesPage() {
     }
   })
 
+  const [deleteCategory] = useMutation<unknown, { id: string }>(DELETE_CATEGORY)
+
   async function onSubmit(formData: CreateCategoryFormData) {
     if (editingCategory) {
       await updateCategory({
@@ -96,6 +99,18 @@ function CategoriesPage() {
   function handleOpenEdit(category: Category) {
     setEditingCategory(category)
     setIsModalOpen(true)
+  }
+
+  async function handleDeleteCategory(categoryId: string) {
+    await deleteCategory({
+      variables: {
+        id: categoryId
+      }
+    })
+
+    await refetch()
+
+    toast.success('Categoria removida!')
   }
 
   const categories = data?.listCategories ?? []
@@ -189,6 +204,7 @@ function CategoriesPage() {
                 itemCount={0}
                 color={category.color as CategoryColor}
                 onEdit={() => handleOpenEdit(category)}
+                onDelete={() => handleDeleteCategory(category.id)}
               />
             ))}
       </div>
