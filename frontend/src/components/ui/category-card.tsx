@@ -1,14 +1,6 @@
 import { SquarePenIcon, TrashIcon } from 'lucide-react'
 import type { ElementType } from 'react'
-
-export type CategoryColor =
-  | 'blue'
-  | 'purple'
-  | 'pink'
-  | 'red'
-  | 'orange'
-  | 'yellow'
-  | 'green'
+import type { CategoryColor } from '@/utils/types'
 
 interface CategoryCardProps {
   icon: ElementType

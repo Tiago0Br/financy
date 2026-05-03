@@ -1,7 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
+import { ApolloProvider } from '@apollo/client/react'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
+import { apolloClient } from './lib/graphql/apollo'
 import { routeTree } from './route-tree.gen'
 
 const router = createRouter({
@@ -16,6 +18,8 @@ declare module '@tanstack/react-router' {
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ApolloProvider client={apolloClient}>
+      <RouterProvider router={router} />
+    </ApolloProvider>
   </StrictMode>
 )

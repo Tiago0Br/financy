@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client/react'
 import { createFileRoute } from '@tanstack/react-router'
 import {
   ArrowUpDownIcon,
@@ -6,16 +7,48 @@ import {
   TicketIcon,
   UtensilsIcon
 } from 'lucide-react'
+import { useState } from 'react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { CategoryCard } from '@/components/ui/category-card'
 import { CategoryModal } from '@/components/ui/category-modal'
 import { SummaryCard } from '@/components/ui/summary-card'
+import { CREATE_CATEGORY } from '@/lib/graphql/mutations/category'
+import type { CategoryFormData } from '@/utils/schemas'
 
 export const Route = createFileRoute('/_protected/categories/')({
   component: CategoriesPage
 })
 
 function CategoriesPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const [createCategory] = useMutation<unknown, { data: CategoryFormData }>(
+    CREATE_CATEGORY,
+    {
+      onCompleted() {
+        toast.success('Categoria cadastrada!')
+        setIsModalOpen(false)
+      },
+      onError() {
+        toast.error('Não foi possível criar a categoria')
+      }
+    }
+  )
+
+  async function onSubmit(data: CategoryFormData) {
+    await createCategory({
+      variables: {
+        data: {
+          title: data.title,
+          description: data.description,
+          color: data.color,
+          icon: data.icon
+        }
+      }
+    })
+  }
+
   return (
     <main className="p-12 flex flex-col gap-8">
       <div className="flex justify-between items-center">
@@ -28,7 +61,9 @@ function CategoriesPage() {
 
         <div>
           <CategoryModal
-            onSubmit={(data) => console.log(data)}
+            open={isModalOpen}
+            onOpenChange={setIsModalOpen}
+            onSubmit={onSubmit}
             trigger={<Button icon={PlusIcon}>Nova categoria</Button>}
           />
         </div>
