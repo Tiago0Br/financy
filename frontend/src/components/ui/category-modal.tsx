@@ -3,7 +3,10 @@ import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { availableColors } from '@/utils/consts'
 import { categoryIcons } from '@/utils/icons'
-import { type CategoryFormData, categorySchema } from '@/utils/schemas'
+import {
+  type CreateCategoryFormData,
+  createCategorySchema
+} from '@/utils/schemas'
 import type { CategoryColor } from '@/utils/types'
 import { Button } from './button'
 import { Input } from './input'
@@ -13,7 +16,8 @@ interface CategoryModalProps {
   open?: boolean
   onOpenChange?: (open: boolean) => void
   trigger?: React.ReactNode
-  onSubmit: (data: CategoryFormData) => void
+  onSubmit: (data: CreateCategoryFormData) => void
+  initialData?: CreateCategoryFormData
 }
 
 const colorBgVariants: Record<CategoryColor, string> = {
@@ -30,7 +34,8 @@ export function CategoryModal({
   open,
   onOpenChange,
   trigger,
-  onSubmit
+  onSubmit,
+  initialData
 }: CategoryModalProps) {
   const {
     register,
@@ -38,9 +43,9 @@ export function CategoryModal({
     control,
     reset,
     formState: { errors, isSubmitting }
-  } = useForm<CategoryFormData>({
-    resolver: zodResolver(categorySchema),
-    defaultValues: {
+  } = useForm<CreateCategoryFormData>({
+    resolver: zodResolver(createCategorySchema),
+    defaultValues: initialData ?? {
       title: '',
       description: '',
       icon: '',
@@ -49,14 +54,21 @@ export function CategoryModal({
   })
 
   useEffect(() => {
-    if (!open) {
-      reset()
+    if (open) {
+      reset(
+        initialData ?? {
+          title: '',
+          description: '',
+          icon: '',
+          color: 'blue'
+        }
+      )
     }
-  }, [open, reset])
+  }, [open, initialData, reset])
 
   return (
     <Modal
-      title="Nova categoria"
+      title={initialData ? 'Alterar categoria' : 'Nova categoria'}
       description="Organize suas transações com categorias"
       open={open}
       onOpenChange={onOpenChange}

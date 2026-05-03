@@ -7,3 +7,11 @@ export const CREATE_CATEGORY = gql`
     }
   }
 `
+
+export const UPDATE_CATEGORY = gql`
+  mutation UpdateComment($data: UpdateCategoryInput!){
+    updateCategory(data: $data){
+      id
+    }
+  }
+`

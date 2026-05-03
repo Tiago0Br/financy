@@ -8,10 +8,16 @@ import { CategoryCard } from '@/components/ui/category-card'
 import { CategoryModal } from '@/components/ui/category-modal'
 import { Skeleton } from '@/components/ui/skeleton'
 import { SummaryCard } from '@/components/ui/summary-card'
-import { CREATE_CATEGORY } from '@/lib/graphql/mutations/category'
+import {
+  CREATE_CATEGORY,
+  UPDATE_CATEGORY
+} from '@/lib/graphql/mutations/category'
 import { LIST_CATEGORIES } from '@/lib/graphql/queries/category'
 import { getCategoryIcon } from '@/utils/icons'
-import type { CategoryFormData } from '@/utils/schemas'
+import type {
+  CreateCategoryFormData,
+  UpdateCategoryFormData
+} from '@/utils/schemas'
 import type { Category, CategoryColor } from '@/utils/types'
 
 export const Route = createFileRoute('/_protected/categories/')({
@@ -20,37 +26,76 @@ export const Route = createFileRoute('/_protected/categories/')({
 
 function CategoriesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null)
 
   const { data, loading, refetch } = useQuery<{
     listCategories: Category[]
   }>(LIST_CATEGORIES)
 
-  const [createCategory] = useMutation<unknown, { data: CategoryFormData }>(
-    CREATE_CATEGORY,
-    {
-      onCompleted() {
-        toast.success('Categoria cadastrada!')
-        setIsModalOpen(false)
-      },
-      onError() {
-        toast.error('Não foi possível criar a categoria')
-      }
+  const [createCategory] = useMutation<
+    unknown,
+    { data: CreateCategoryFormData }
+  >(CREATE_CATEGORY, {
+    onCompleted() {
+      toast.success('Categoria cadastrada!')
+      setIsModalOpen(false)
+      refetch()
+    },
+    onError() {
+      toast.error('Não foi possível criar a categoria')
     }
-  )
+  })
 
-  async function onSubmit(data: CategoryFormData) {
+  const [updateCategory] = useMutation<
+    unknown,
+    { data: UpdateCategoryFormData }
+  >(UPDATE_CATEGORY, {
+    onCompleted() {
+      toast.success('Categoria atualizada!')
+      setIsModalOpen(false)
+      refetch()
+    },
+    onError() {
+      toast.error('Não foi possível atualizar a categoria')
+    }
+  })
+
+  async function onSubmit(formData: CreateCategoryFormData) {
+    if (editingCategory) {
+      await updateCategory({
+        variables: {
+          data: {
+            id: editingCategory.id,
+            title: formData.title,
+            description: formData.description,
+            color: formData.color,
+            icon: formData.icon
+          }
+        }
+      })
+      return
+    }
+
     await createCategory({
       variables: {
         data: {
-          title: data.title,
-          description: data.description,
-          color: data.color,
-          icon: data.icon
+          title: formData.title,
+          description: formData.description,
+          color: formData.color,
+          icon: formData.icon
         }
       }
     })
+  }
 
-    await refetch()
+  function handleOpenCreate() {
+    setEditingCategory(null)
+    setIsModalOpen(true)
+  }
+
+  function handleOpenEdit(category: Category) {
+    setEditingCategory(category)
+    setIsModalOpen(true)
   }
 
   const categories = data?.listCategories ?? []
@@ -66,11 +111,23 @@ function CategoriesPage() {
         </div>
 
         <div>
+          <Button icon={PlusIcon} onClick={handleOpenCreate}>
+            Nova categoria
+          </Button>
           <CategoryModal
             open={isModalOpen}
             onOpenChange={setIsModalOpen}
             onSubmit={onSubmit}
-            trigger={<Button icon={PlusIcon}>Nova categoria</Button>}
+            initialData={
+              editingCategory
+                ? {
+                    title: editingCategory.title,
+                    description: editingCategory.description,
+                    icon: editingCategory.icon,
+                    color: editingCategory.color as CategoryColor
+                  }
+                : undefined
+            }
           />
         </div>
       </div>
@@ -131,6 +188,7 @@ function CategoriesPage() {
                 description={category.description}
                 itemCount={0}
                 color={category.color as CategoryColor}
+                onEdit={() => handleOpenEdit(category)}
               />
             ))}
       </div>
