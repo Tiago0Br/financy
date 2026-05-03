@@ -5,7 +5,7 @@ import type { CategoryColor } from '@/utils/types'
 interface CategoryCardProps {
   icon: ElementType
   name: string
-  description: string
+  description?: string
   itemCount: number
   color: CategoryColor
   onEdit?: () => void
@@ -101,7 +101,9 @@ export function CategoryCard({
 
       <div className="flex flex-col">
         <strong className="text-gray-800">{name}</strong>
-        <span className="text-gray-600 text-sm">{description}</span>
+        {description && (
+          <span className="text-gray-600 text-sm">{description}</span>
+        )}
       </div>
 
       <div className="flex justify-between items-center">

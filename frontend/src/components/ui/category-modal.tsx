@@ -1,25 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  BaggageClaimIcon,
-  BookOpenIcon,
-  BriefcaseBusinessIcon,
-  CarFrontIcon,
-  DumbbellIcon,
-  GiftIcon,
-  HeartPulseIcon,
-  HouseIcon,
-  MailboxIcon,
-  PawPrintIcon,
-  PiggyBankIcon,
-  ReceiptTextIcon,
-  ShoppingCartIcon,
-  TicketIcon,
-  ToolCaseIcon,
-  UtensilsIcon
-} from 'lucide-react'
-import { type ElementType, useEffect } from 'react'
+import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { availableColors } from '@/utils/consts'
+import { categoryIcons } from '@/utils/icons'
 import { type CategoryFormData, categorySchema } from '@/utils/schemas'
 import type { CategoryColor } from '@/utils/types'
 import { Button } from './button'
@@ -32,25 +15,6 @@ interface CategoryModalProps {
   trigger?: React.ReactNode
   onSubmit: (data: CategoryFormData) => void
 }
-
-const icons: Array<{ name: string; icon: ElementType }> = [
-  { name: 'BriefcaseBusiness', icon: BriefcaseBusinessIcon },
-  { name: 'CarFront', icon: CarFrontIcon },
-  { name: 'HeartPulse', icon: HeartPulseIcon },
-  { name: 'PiggyBank', icon: PiggyBankIcon },
-  { name: 'ShoppingCart', icon: ShoppingCartIcon },
-  { name: 'Ticket', icon: TicketIcon },
-  { name: 'ToolCase', icon: ToolCaseIcon },
-  { name: 'Utensils', icon: UtensilsIcon },
-  { name: 'PawPrint', icon: PawPrintIcon },
-  { name: 'House', icon: HouseIcon },
-  { name: 'Gift', icon: GiftIcon },
-  { name: 'Dumbbell', icon: DumbbellIcon },
-  { name: 'BookOpen', icon: BookOpenIcon },
-  { name: 'BaggageClaim', icon: BaggageClaimIcon },
-  { name: 'Mailbox', icon: MailboxIcon },
-  { name: 'ReceiptText', icon: ReceiptTextIcon }
-]
 
 const colorBgVariants: Record<CategoryColor, string> = {
   blue: 'bg-blue-base',
@@ -124,7 +88,7 @@ export function CategoryModal({
               control={control}
               render={({ field }) => (
                 <div className="flex flex-wrap gap-2">
-                  {icons.map(({ name, icon: Icon }) => (
+                  {categoryIcons.map(({ name, icon: Icon }) => (
                     <button
                       key={name}
                       type="button"
