@@ -2,6 +2,7 @@ import { Link, type LinkProps } from '@tanstack/react-router'
 
 interface MenuLinkProps extends LinkProps {
   children: React.ReactNode
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>
 }
 
 export function MenuLink({ children, to, ...props }: MenuLinkProps) {
