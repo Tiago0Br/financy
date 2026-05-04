@@ -1,5 +1,5 @@
 import type { ElementType } from 'react'
-import { Skeleton } from './skeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface SummaryCardProps {
   icon: ElementType

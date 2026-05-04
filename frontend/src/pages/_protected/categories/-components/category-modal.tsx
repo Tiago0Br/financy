@@ -1,6 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Modal } from '@/components/ui/modal'
 import { availableColors } from '@/utils/consts'
 import { categoryIcons } from '@/utils/icons'
 import {
@@ -8,9 +11,6 @@ import {
   createCategorySchema
 } from '@/utils/schemas'
 import type { CategoryColor } from '@/utils/types'
-import { Button } from './button'
-import { Input } from './input'
-import { Modal } from './modal'
 
 interface CategoryModalProps {
   open?: boolean

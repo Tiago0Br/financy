@@ -1,5 +1,5 @@
 import { ArrowUpDownIcon, TagIcon, UtensilsIcon } from 'lucide-react'
-import { SummaryCard } from '@/components/ui/summary-card'
+import { SummaryCard } from './summary-card'
 
 interface CategoriesSummaryProps {
   categoriesCount: number

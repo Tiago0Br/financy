@@ -1,7 +1,7 @@
 import { AlertDialog } from '@/components/ui/alert-dialog'
-import { CategoryModal } from '@/components/ui/category-modal'
 import type { CreateCategoryFormData } from '@/utils/schemas'
 import type { Category, CategoryColor } from '@/utils/types'
+import { CategoryModal } from './category-modal'
 
 interface CategoriesModalsProps {
   isModalOpen: boolean

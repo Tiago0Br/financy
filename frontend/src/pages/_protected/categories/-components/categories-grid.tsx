@@ -1,6 +1,6 @@
-import { CategoryCard } from '@/components/ui/category-card'
 import { getCategoryIcon } from '@/utils/icons'
 import type { Category, CategoryColor } from '@/utils/types'
+import { CategoryCard } from './category-card'
 import { CategoryCardSkeleton } from './category-card-skeleton'
 
 interface CategoriesGridProps {

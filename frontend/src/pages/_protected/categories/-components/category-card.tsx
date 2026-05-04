@@ -1,5 +1,6 @@
 import { SquarePenIcon, TrashIcon } from 'lucide-react'
 import type { ElementType } from 'react'
+import { ActionButton } from '@/components/ui/action-button'
 import { colorVariants } from '@/utils/consts'
 import type { CategoryColor } from '@/utils/types'
 
@@ -34,21 +35,8 @@ export function CategoryCard({
         </div>
 
         <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={onDelete}
-            className="size-8 rounded-md border border-gray-300 flex items-center justify-center cursor-pointer"
-          >
-            <TrashIcon className="size-4 text-danger" />
-          </button>
-
-          <button
-            type="button"
-            onClick={onEdit}
-            className="size-8 rounded-md border border-gray-300 flex items-center justify-center cursor-pointer"
-          >
-            <SquarePenIcon className="size-4 text-gray-700" />
-          </button>
+          <ActionButton icon={TrashIcon} variant="danger" onClick={onDelete} />
+          <ActionButton icon={SquarePenIcon} onClick={onEdit} />
         </div>
       </div>
 
