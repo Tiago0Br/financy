@@ -3,6 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { ArrowUpDownIcon, PlusIcon, TagIcon, UtensilsIcon } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { AlertDialog } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { CategoryCard } from '@/components/ui/category-card'
 import { CategoryModal } from '@/components/ui/category-modal'
@@ -27,7 +28,11 @@ export const Route = createFileRoute('/_protected/categories/')({
 
 function CategoriesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
+  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
+    null
+  )
 
   const { data, loading, refetch } = useQuery<{
     listCategories: Category[]
@@ -61,7 +66,19 @@ function CategoriesPage() {
     }
   })
 
-  const [deleteCategory] = useMutation<unknown, { id: string }>(DELETE_CATEGORY)
+  const [deleteCategory, { loading: isDeleting }] = useMutation<
+    unknown,
+    { id: string }
+  >(DELETE_CATEGORY, {
+    onCompleted() {
+      toast.success('Categoria removida!')
+      setIsDeleteModalOpen(false)
+      refetch()
+    },
+    onError() {
+      toast.error('Não foi possível remover a categoria')
+    }
+  })
 
   async function onSubmit(formData: CreateCategoryFormData) {
     if (editingCategory) {
@@ -101,16 +118,19 @@ function CategoriesPage() {
     setIsModalOpen(true)
   }
 
-  async function handleDeleteCategory(categoryId: string) {
+  function handleOpenDelete(category: Category) {
+    setCategoryToDelete(category)
+    setIsDeleteModalOpen(true)
+  }
+
+  async function confirmDelete() {
+    if (!categoryToDelete) return
+
     await deleteCategory({
       variables: {
-        id: categoryId
+        id: categoryToDelete.id
       }
     })
-
-    await refetch()
-
-    toast.success('Categoria removida!')
   }
 
   const categories = data?.listCategories ?? []
@@ -146,6 +166,17 @@ function CategoriesPage() {
           />
         </div>
       </div>
+
+      <AlertDialog
+        open={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
+        title="Você tem certeza?"
+        description={`Esta ação é irreversível e excluirá permanentemente a categoria "${categoryToDelete?.title}".`}
+        confirmText="Excluir"
+        variant="danger"
+        onConfirm={confirmDelete}
+        isLoading={isDeleting}
+      />
 
       <div className="flex justify-center gap-6 flex-wrap">
         <SummaryCard
@@ -204,7 +235,7 @@ function CategoriesPage() {
                 itemCount={0}
                 color={category.color as CategoryColor}
                 onEdit={() => handleOpenEdit(category)}
-                onDelete={() => handleDeleteCategory(category.id)}
+                onDelete={() => handleOpenDelete(category)}
               />
             ))}
       </div>

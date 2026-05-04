@@ -15,7 +15,7 @@ _Foco em configurar a comunicação com o backend e garantir o acesso seguro do 
 
 _As categorias são essenciais para classificar as transações._
 
-- [ ] **CRUD Completo de Categorias** (1 a 2 dias)
+- [x] **CRUD Completo de Categorias** (1 a 2 dias)
   - **Listagem:** Exibir todas as categorias criadas pelo usuário.
   - **Criação/Edição:** Formulários com validação para novas categorias ou alterações.
   - **Exclusão:** Remover categorias existentes com confirmação.
