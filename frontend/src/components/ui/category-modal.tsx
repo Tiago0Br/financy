@@ -99,14 +99,14 @@ export function CategoryModal({
               name="icon"
               control={control}
               render={({ field }) => (
-                <div className="flex flex-wrap gap-2">
+                <div className="grid grid-cols-5 sm:grid-cols-8 gap-2">
                   {categoryIcons.map(({ name, icon: Icon }) => (
                     <button
                       key={name}
                       type="button"
                       disabled={isSubmitting}
                       onClick={() => field.onChange(name)}
-                      className={`size-10.5 flex items-center justify-center rounded-lg border transition-all cursor-pointer ${
+                      className={`size-10 flex items-center justify-center rounded-lg border transition-all cursor-pointer ${
                         field.value === name
                           ? 'border-brand-base bg-brand-base/10 text-brand-base'
                           : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -136,7 +136,7 @@ export function CategoryModal({
                       type="button"
                       disabled={isSubmitting}
                       onClick={() => field.onChange(color)}
-                      className={`w-12.5 h-7.5 rounded-sm transition-all cursor-pointer ring-offset-2 ${
+                      className={`w-10 h-10 sm:w-12.5 sm:h-7.5 rounded-sm transition-all cursor-pointer ring-offset-2 ${
                         colorBgVariants[color]
                       } ${
                         field.value === color
@@ -156,7 +156,7 @@ export function CategoryModal({
           </div>
         </div>
 
-        <Button type="submit" isLoading={isSubmitting}>
+        <Button type="submit" isLoading={isSubmitting} className="w-full">
           Salvar
         </Button>
       </form>

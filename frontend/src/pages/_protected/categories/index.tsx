@@ -7,7 +7,6 @@ import { AlertDialog } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { CategoryCard } from '@/components/ui/category-card'
 import { CategoryModal } from '@/components/ui/category-modal'
-import { Skeleton } from '@/components/ui/skeleton'
 import { SummaryCard } from '@/components/ui/summary-card'
 import {
   CREATE_CATEGORY,
@@ -21,6 +20,7 @@ import type {
   UpdateCategoryFormData
 } from '@/utils/schemas'
 import type { Category, CategoryColor } from '@/utils/types'
+import { CategoryCardSkeleton } from './-components/category-card-skeleton'
 
 export const Route = createFileRoute('/_protected/categories/')({
   component: CategoriesPage
@@ -136,8 +136,8 @@ function CategoriesPage() {
   const categories = data?.listCategories ?? []
 
   return (
-    <main className="p-12 flex flex-col gap-8">
-      <div className="flex justify-between items-center">
+    <main className="p-6 md:p-12 flex flex-col gap-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
         <div className="flex flex-col">
           <h1 className="text-2xl font-bold text-gray-800">Categorias</h1>
           <span className="text-gray-600">
@@ -145,8 +145,12 @@ function CategoriesPage() {
           </span>
         </div>
 
-        <div>
-          <Button icon={PlusIcon} onClick={handleOpenCreate}>
+        <div className="w-full sm:w-auto">
+          <Button
+            icon={PlusIcon}
+            onClick={handleOpenCreate}
+            className="w-full sm:w-auto"
+          >
             Nova categoria
           </Button>
           <CategoryModal
@@ -178,7 +182,7 @@ function CategoriesPage() {
         isLoading={isDeleting}
       />
 
-      <div className="flex justify-center gap-6 flex-wrap">
+      <div className="grid grid-cols-1 md:flex md:justify-center gap-6">
         <SummaryCard
           icon={TagIcon}
           value={categories.length}
@@ -205,26 +209,7 @@ function CategoriesPage() {
       <div className="flex justify-center flex-wrap gap-4">
         {loading
           ? Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={`skeleton-${i}`}
-                className="w-71 h-48 bg-white rounded-lg border border-gray-200 p-6 flex flex-col gap-5"
-              >
-                <div className="flex justify-between">
-                  <Skeleton className="size-10 rounded-md" />
-                  <div className="flex gap-2">
-                    <Skeleton className="size-8 rounded-md" />
-                    <Skeleton className="size-8 rounded-md" />
-                  </div>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Skeleton className="h-4 w-24" />
-                  <Skeleton className="h-3 w-40" />
-                </div>
-                <div className="flex justify-between items-center mt-auto">
-                  <Skeleton className="h-6 w-20 rounded-xl" />
-                  <Skeleton className="h-4 w-12" />
-                </div>
-              </div>
+              <CategoryCardSkeleton key={`skeleton-${i}`} />
             ))
           : categories.map((category) => (
               <CategoryCard
