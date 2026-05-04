@@ -1,229 +1,59 @@
-import { useMutation, useQuery } from '@apollo/client/react'
 import { createFileRoute } from '@tanstack/react-router'
-import { ArrowUpDownIcon, PlusIcon, TagIcon, UtensilsIcon } from 'lucide-react'
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { AlertDialog } from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
-import { CategoryCard } from '@/components/ui/category-card'
-import { CategoryModal } from '@/components/ui/category-modal'
-import { SummaryCard } from '@/components/ui/summary-card'
-import {
-  CREATE_CATEGORY,
-  DELETE_CATEGORY,
-  UPDATE_CATEGORY
-} from '@/lib/graphql/mutations/category'
-import { LIST_CATEGORIES } from '@/lib/graphql/queries/category'
-import { getCategoryIcon } from '@/utils/icons'
-import type {
-  CreateCategoryFormData,
-  UpdateCategoryFormData
-} from '@/utils/schemas'
-import type { Category, CategoryColor } from '@/utils/types'
-import { CategoryCardSkeleton } from './-components/category-card-skeleton'
+import { CategoriesGrid } from './-components/categories-grid'
+import { CategoriesHeader } from './-components/categories-header'
+import { CategoriesModals } from './-components/categories-modals'
+import { CategoriesSummary } from './-components/categories-summary'
+import { useCategoriesController } from './-hooks/use-categories-controller'
 
 export const Route = createFileRoute('/_protected/categories/')({
   component: CategoriesPage
 })
 
 function CategoriesPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null)
-  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
-    null
-  )
-
-  const { data, loading, refetch } = useQuery<{
-    listCategories: Category[]
-  }>(LIST_CATEGORIES)
-
-  const [createCategory] = useMutation<
-    unknown,
-    { data: CreateCategoryFormData }
-  >(CREATE_CATEGORY, {
-    onCompleted() {
-      toast.success('Categoria cadastrada!')
-      setIsModalOpen(false)
-      refetch()
-    },
-    onError() {
-      toast.error('Não foi possível criar a categoria')
-    }
-  })
-
-  const [updateCategory] = useMutation<
-    unknown,
-    { data: UpdateCategoryFormData }
-  >(UPDATE_CATEGORY, {
-    onCompleted() {
-      toast.success('Categoria atualizada!')
-      setIsModalOpen(false)
-      refetch()
-    },
-    onError() {
-      toast.error('Não foi possível atualizar a categoria')
-    }
-  })
-
-  const [deleteCategory, { loading: isDeleting }] = useMutation<
-    unknown,
-    { id: string }
-  >(DELETE_CATEGORY, {
-    onCompleted() {
-      toast.success('Categoria removida!')
-      setIsDeleteModalOpen(false)
-      refetch()
-    },
-    onError() {
-      toast.error('Não foi possível remover a categoria')
-    }
-  })
-
-  async function onSubmit(formData: CreateCategoryFormData) {
-    if (editingCategory) {
-      await updateCategory({
-        variables: {
-          data: {
-            id: editingCategory.id,
-            title: formData.title,
-            description: formData.description,
-            color: formData.color,
-            icon: formData.icon
-          }
-        }
-      })
-      return
-    }
-
-    await createCategory({
-      variables: {
-        data: {
-          title: formData.title,
-          description: formData.description,
-          color: formData.color,
-          icon: formData.icon
-        }
-      }
-    })
-  }
-
-  function handleOpenCreate() {
-    setEditingCategory(null)
-    setIsModalOpen(true)
-  }
-
-  function handleOpenEdit(category: Category) {
-    setEditingCategory(category)
-    setIsModalOpen(true)
-  }
-
-  function handleOpenDelete(category: Category) {
-    setCategoryToDelete(category)
-    setIsDeleteModalOpen(true)
-  }
-
-  async function confirmDelete() {
-    if (!categoryToDelete) return
-
-    await deleteCategory({
-      variables: {
-        id: categoryToDelete.id
-      }
-    })
-  }
-
-  const categories = data?.listCategories ?? []
+  const {
+    categories,
+    loading,
+    isModalOpen,
+    setIsModalOpen,
+    isDeleteModalOpen,
+    setIsDeleteModalOpen,
+    editingCategory,
+    categoryToDelete,
+    isDeleting,
+    onSubmit,
+    handleOpenCreate,
+    handleOpenEdit,
+    handleOpenDelete,
+    confirmDelete
+  } = useCategoriesController()
 
   return (
     <main className="p-6 md:p-12 flex flex-col gap-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
-        <div className="flex flex-col">
-          <h1 className="text-2xl font-bold text-gray-800">Categorias</h1>
-          <span className="text-gray-600">
-            Organize suas transações por categorias
-          </span>
-        </div>
+      <CategoriesHeader onOpenCreate={handleOpenCreate} />
 
-        <div className="w-full sm:w-auto">
-          <Button
-            icon={PlusIcon}
-            onClick={handleOpenCreate}
-            className="w-full sm:w-auto"
-          >
-            Nova categoria
-          </Button>
-          <CategoryModal
-            open={isModalOpen}
-            onOpenChange={setIsModalOpen}
-            onSubmit={onSubmit}
-            initialData={
-              editingCategory
-                ? {
-                    title: editingCategory.title,
-                    description: editingCategory.description,
-                    icon: editingCategory.icon,
-                    color: editingCategory.color as CategoryColor
-                  }
-                : undefined
-            }
-          />
-        </div>
-      </div>
-
-      <AlertDialog
-        open={isDeleteModalOpen}
-        onOpenChange={setIsDeleteModalOpen}
-        title="Você tem certeza?"
-        description={`Esta ação é irreversível e excluirá permanentemente a categoria "${categoryToDelete?.title}".`}
-        confirmText="Excluir"
-        variant="danger"
-        onConfirm={confirmDelete}
-        isLoading={isDeleting}
+      <CategoriesModals
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        isDeleteModalOpen={isDeleteModalOpen}
+        setIsDeleteModalOpen={setIsDeleteModalOpen}
+        editingCategory={editingCategory}
+        categoryToDelete={categoryToDelete}
+        isDeleting={isDeleting}
+        onSubmit={onSubmit}
+        confirmDelete={confirmDelete}
       />
 
-      <div className="grid grid-cols-1 md:flex md:justify-center gap-6">
-        <SummaryCard
-          icon={TagIcon}
-          value={categories.length}
-          label="Total de categorias"
-          iconClassName="text-gray-700"
-          isLoading={loading}
-        />
-        <SummaryCard
-          icon={ArrowUpDownIcon}
-          value={27}
-          label="Total de transações"
-          iconClassName="text-purple-base"
-          isLoading={loading}
-        />
-        <SummaryCard
-          icon={UtensilsIcon}
-          value="Alimentação"
-          label="Categoria mais utilizada"
-          iconClassName="text-blue-base"
-          isLoading={loading}
-        />
-      </div>
+      <CategoriesSummary
+        categoriesCount={categories.length}
+        loading={loading}
+      />
 
-      <div className="flex justify-center flex-wrap gap-4">
-        {loading
-          ? Array.from({ length: 4 }).map((_, i) => (
-              <CategoryCardSkeleton key={`skeleton-${i}`} />
-            ))
-          : categories.map((category) => (
-              <CategoryCard
-                key={category.id}
-                icon={getCategoryIcon(category.icon)}
-                name={category.title}
-                description={category.description}
-                itemCount={0}
-                color={category.color as CategoryColor}
-                onEdit={() => handleOpenEdit(category)}
-                onDelete={() => handleOpenDelete(category)}
-              />
-            ))}
-      </div>
+      <CategoriesGrid
+        categories={categories}
+        loading={loading}
+        onOpenEdit={handleOpenEdit}
+        onOpenDelete={handleOpenDelete}
+      />
     </main>
   )
 }
