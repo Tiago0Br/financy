@@ -5,6 +5,8 @@ import { TransactionsFilters } from './-components/transactions-filters'
 import { TransactionsHeader } from './-components/transactions-header'
 import { TransactionsPagination } from './-components/transactions-pagination'
 import { TransactionsTable } from './-components/transactions-table'
+import { useTransactionsController } from './-hooks/use-transactions-controller'
+import { TransactionsModals } from './-components/transactions-modals'
 
 export const Route = createFileRoute('/_protected/transactions/')({
   component: TransactionsPage
@@ -134,6 +136,8 @@ const transactions: Transaction[] = [
 ]
 
 function TransactionsPage() {
+  const { isModalOpen, setIsModalOpen, handleOpenCreate, onSubmit } =
+    useTransactionsController()
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
   const totalPages = Math.ceil(transactions.length / itemsPerPage)
@@ -145,7 +149,7 @@ function TransactionsPage() {
 
   return (
     <main className="p-6 md:p-12 flex flex-col gap-8">
-      <TransactionsHeader />
+      <TransactionsHeader onOpenCreate={handleOpenCreate} />
       <TransactionsFilters />
 
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
@@ -157,6 +161,12 @@ function TransactionsPage() {
           onPageChange={setCurrentPage}
         />
       </div>
+
+      <TransactionsModals
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        onSubmit={onSubmit}
+      />
     </main>
   )
 }
