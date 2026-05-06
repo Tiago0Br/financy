@@ -40,3 +40,16 @@ export interface Transaction {
     icon: string
   }
 }
+
+export interface PaginatedTransactions {
+  items: Transaction[]
+  totalCount: number
+  pageInfo: {
+    totalPages: number
+    currentPage: number
+    hasNextPage: boolean
+    hasPreviousPage: boolean
+    rangeEnd: number
+    rangeStart: number
+  }
+}

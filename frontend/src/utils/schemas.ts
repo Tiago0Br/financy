@@ -48,3 +48,20 @@ export const updateTransactionSchema = z.object({
 })
 
 export type UpdateTransactionFormData = z.infer<typeof updateTransactionSchema>
+
+export const transactionsSearchSchema = z.object({
+  description: z.string().optional().catch('').default(''),
+  type: z.string().optional().catch('ALL').default('ALL'),
+  categoryId: z.string().optional().catch('ALL').default('ALL'),
+  month: z
+    .number()
+    .optional()
+    .catch(new Date().getMonth())
+    .default(new Date().getMonth()),
+  year: z
+    .number()
+    .optional()
+    .catch(new Date().getFullYear())
+    .default(new Date().getFullYear()),
+  page: z.number().optional().catch(1).default(1)
+})

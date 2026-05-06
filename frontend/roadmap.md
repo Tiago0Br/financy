@@ -24,12 +24,12 @@ _As categorias são essenciais para classificar as transações._
 
 _O núcleo da aplicação, envolvendo maior complexidade de UI e integração de dados._
 
-- [ ] **Listagem de Transações com Filtros** (1 a 2 dias)
-  - Implementar a visualização principal de transações.
-  - Adicionar filtros por data, tipo ou categoria.
-- [ ] **CRUD de Transações com Relacionamento** (2 a 3 dias)
+- [x] **CRUD de Transações com Relacionamento** (2 a 3 dias)
   - Criar, editar e excluir transações.
   - O formulário deve permitir a seleção de uma das categorias criadas na Etapa 2.
+- [x] **Listagem de Transações com Filtros** (1 a 2 dias)
+  - Implementar a visualização principal de transações.
+  - Adicionar filtros por data, tipo ou categoria.
 
 ## Etapa 4: Segurança e Refinamento
 

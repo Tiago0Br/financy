@@ -1,19 +1,36 @@
 import { useMutation, useQuery } from '@apollo/client/react'
-import { useState } from 'react'
+import { useNavigate } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import {
   CREATE_TRANSACTION,
   DELETE_TRANSACTION,
   UPDATE_TRANSACTION
 } from '@/lib/graphql/mutations/transactions'
+import { LIST_CATEGORIES } from '@/lib/graphql/queries/category'
 import { LIST_TRANSACTIONS } from '@/lib/graphql/queries/transactions'
 import type {
   CreateTransactionFormData,
   UpdateTransactionFormData
 } from '@/utils/schemas'
-import type { Transaction } from '@/utils/types'
+import type {
+  Category,
+  PaginatedTransactions,
+  Transaction
+} from '@/utils/types'
+import { useDebounce } from '@/utils/use-debounce'
 
-export function useTransactionsController() {
+interface Filters {
+  description: string
+  type: string
+  categoryId: string
+  month: number
+  year: number
+  page: number
+}
+
+export function useTransactionsController(initialFilters: Filters) {
+  const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [editingTransaction, setEditingTransaction] =
@@ -21,13 +38,58 @@ export function useTransactionsController() {
   const [transactionToDelete, setTransactionToDelete] =
     useState<Transaction | null>(null)
 
+  const [filters, setFilters] = useState<Filters>(initialFilters)
+
+  const debouncedDescription = useDebounce(filters.description, 500)
+
+  // Sync local state with URL changes (e.g. browser back/forward)
+  useEffect(() => {
+    setFilters(initialFilters)
+  }, [initialFilters])
+
+  useEffect(() => {
+    navigate({
+      to: '.',
+      search: (prev) => ({
+        ...prev,
+        type: filters.type,
+        categoryId: filters.categoryId,
+        month: filters.month,
+        year: filters.year,
+        page: filters.page,
+        description: debouncedDescription
+      }),
+      replace: true
+    })
+  }, [
+    debouncedDescription,
+    filters.type,
+    filters.categoryId,
+    filters.month,
+    filters.year,
+    filters.page,
+    navigate
+  ])
+
   const { data, loading, refetch } = useQuery<{
-    listTransactions: Transaction[]
+    listTransactions: PaginatedTransactions
   }>(LIST_TRANSACTIONS, {
     variables: {
-      data: {}
+      data: {
+        description: debouncedDescription || undefined,
+        type: filters.type === 'ALL' ? undefined : filters.type,
+        categoryId:
+          filters.categoryId === 'ALL' ? undefined : filters.categoryId,
+        month: filters.month + 1,
+        year: filters.year,
+        page: filters.page
+      }
     }
   })
+
+  const { data: categoriesData } = useQuery<{
+    listCategories: Category[]
+  }>(LIST_CATEGORIES)
 
   const [createTransaction] = useMutation<
     unknown,
@@ -96,6 +158,17 @@ export function useTransactionsController() {
     })
   }
 
+  function handleChangeFilters<T extends keyof typeof filters>(
+    name: string,
+    value: (typeof filters)[T]
+  ) {
+    setFilters((prev) => ({
+      ...prev,
+      [name]: value,
+      page: name === 'page' ? (value as number) : 1
+    }))
+  }
+
   async function onSubmit(data: CreateTransactionFormData) {
     if (editingTransaction) {
       await updateTransaction({
@@ -127,8 +200,12 @@ export function useTransactionsController() {
   }
 
   return {
-    transactions: data?.listTransactions ?? [],
+    transactionData: data?.listTransactions,
+    categories: categoriesData?.listCategories ?? [],
     loading,
+    filters,
+    setFilters,
+    handleChangeFilters,
     isModalOpen,
     setIsModalOpen,
     isDeleteModalOpen,
