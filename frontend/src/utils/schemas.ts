@@ -37,3 +37,14 @@ export const createTransactionSchema = z.object({
 })
 
 export type CreateTransactionFormData = z.infer<typeof createTransactionSchema>
+
+export const updateTransactionSchema = z.object({
+  id: z.string().uuid(),
+  type: z.enum(['INCOME', 'OUTCOME']).optional(),
+  description: z.string().optional(),
+  date: z.string().optional(),
+  amount: z.coerce.number().optional(),
+  categoryId: z.string().optional()
+})
+
+export type UpdateTransactionFormData = z.infer<typeof updateTransactionSchema>

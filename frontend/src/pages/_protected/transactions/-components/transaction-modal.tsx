@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client/react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { format } from 'date-fns'
 import { ArrowDownCircleIcon, ArrowUpCircleIcon } from 'lucide-react'
 import { useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -70,7 +71,7 @@ export function TransactionModal({
       value: category.id
     })) ?? []
 
-  const today = useMemo(() => new Date().toISOString().split('T')[0], [])
+  const today = useMemo(() => format(new Date(), 'yyyy-MM-dd'), [])
 
   return (
     <Modal

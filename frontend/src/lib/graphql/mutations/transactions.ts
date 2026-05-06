@@ -7,3 +7,17 @@ export const CREATE_TRANSACTION = gql`
     }
   }
 `
+
+export const UPDATE_TRANSACTION = gql`
+  mutation UpdateTransaction($data: UpdateTransactionInput!) {
+    updateTransaction(data: $data) {
+      id
+    }
+  }
+`
+
+export const DELETE_TRANSACTION = gql`
+  mutation DeleteTransaction($id: String!) {
+    deleteTransaction(id: $id)
+  }
+`

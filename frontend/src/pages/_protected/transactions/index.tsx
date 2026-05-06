@@ -16,7 +16,15 @@ function TransactionsPage() {
     transactions,
     isModalOpen,
     setIsModalOpen,
+    isDeleteModalOpen,
+    setIsDeleteModalOpen,
+    editingTransaction,
+    transactionToDelete,
+    isDeleting,
     handleOpenCreate,
+    handleOpenEdit,
+    handleOpenDelete,
+    confirmDelete,
     onSubmit
   } = useTransactionsController()
   const [currentPage, setCurrentPage] = useState(1)
@@ -34,7 +42,11 @@ function TransactionsPage() {
       <TransactionsFilters />
 
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <TransactionsTable transactions={paginatedTransactions} />
+        <TransactionsTable
+          transactions={paginatedTransactions}
+          onEdit={handleOpenEdit}
+          onDelete={handleOpenDelete}
+        />
         <TransactionsPagination
           totalCount={transactions.length}
           currentPage={currentPage}
@@ -46,7 +58,13 @@ function TransactionsPage() {
       <TransactionsModals
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
+        isDeleteModalOpen={isDeleteModalOpen}
+        setIsDeleteModalOpen={setIsDeleteModalOpen}
+        editingTransaction={editingTransaction}
+        transactionToDelete={transactionToDelete}
+        isDeleting={isDeleting}
         onSubmit={onSubmit}
+        confirmDelete={confirmDelete}
       />
     </main>
   )

@@ -12,9 +12,15 @@ import type { CategoryColor, Transaction } from '@/utils/types'
 
 interface TransactionsTableProps {
   transactions: Transaction[]
+  onEdit: (transaction: Transaction) => void
+  onDelete: (transaction: Transaction) => void
 }
 
-export function TransactionsTable({ transactions }: TransactionsTableProps) {
+export function TransactionsTable({
+  transactions,
+  onEdit,
+  onDelete
+}: TransactionsTableProps) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left border-collapse min-w-200">
@@ -89,9 +95,12 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                     <ActionButton
                       icon={TrashIcon}
                       variant="danger"
-                      onClick={() => {}}
+                      onClick={() => onDelete(transaction)}
                     />
-                    <ActionButton icon={SquarePenIcon} onClick={() => {}} />
+                    <ActionButton
+                      icon={SquarePenIcon}
+                      onClick={() => onEdit(transaction)}
+                    />
                   </div>
                 </td>
               </tr>
