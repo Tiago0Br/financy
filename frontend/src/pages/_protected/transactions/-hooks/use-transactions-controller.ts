@@ -42,7 +42,6 @@ export function useTransactionsController(initialFilters: Filters) {
 
   const debouncedDescription = useDebounce(filters.description, 500)
 
-  // Sync local state with URL changes (e.g. browser back/forward)
   useEffect(() => {
     setFilters(initialFilters)
   }, [initialFilters])

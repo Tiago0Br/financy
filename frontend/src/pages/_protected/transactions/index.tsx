@@ -19,6 +19,7 @@ function TransactionsPage() {
     categories,
     filters,
     handleChangeFilters,
+    loading,
     isModalOpen,
     setIsModalOpen,
     isDeleteModalOpen,
@@ -47,6 +48,7 @@ function TransactionsPage() {
           transactions={transactionData?.items ?? []}
           onEdit={handleOpenEdit}
           onDelete={handleOpenDelete}
+          loading={loading}
         />
         <TransactionsPagination
           totalCount={transactionData?.totalCount ?? 0}
@@ -55,6 +57,7 @@ function TransactionsPage() {
           rangeStart={transactionData?.pageInfo.rangeStart ?? 1}
           rangeEnd={transactionData?.pageInfo.rangeEnd ?? 1}
           onPageChange={(page) => handleChangeFilters('page', page)}
+          loading={loading}
         />
       </div>
 

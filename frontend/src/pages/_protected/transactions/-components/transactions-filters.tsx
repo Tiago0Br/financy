@@ -56,7 +56,7 @@ export function TransactionsFilters({
           <Select
             label="Categoria"
             options={[
-              { label: 'Todos', value: 'ALL' },
+              { label: 'Todas', value: 'ALL' },
               ...categories.map((category) => ({
                 label: category.title,
                 value: category.id
