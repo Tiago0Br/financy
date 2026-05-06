@@ -1,9 +1,10 @@
 import { EyeClosedIcon, EyeIcon } from 'lucide-react'
-import { type ComponentProps, type ElementType, useState } from 'react'
+import { useState } from 'react'
 
-interface InputProps extends ComponentProps<'input'> {
+interface InputProps extends React.ComponentProps<'input'> {
   label: string
-  icon?: ElementType
+  icon?: React.ElementType
+  textIcon?: string
   error?: string
   hint?: string
   isFilled?: boolean
@@ -12,6 +13,7 @@ interface InputProps extends ComponentProps<'input'> {
 export function Input({
   label,
   icon: Icon,
+  textIcon,
   error,
   hint,
   isFilled = false,
@@ -63,6 +65,8 @@ export function Input({
             }`}
           />
         )}
+
+        {textIcon && <span>{textIcon}</span>}
 
         <input
           id={id}

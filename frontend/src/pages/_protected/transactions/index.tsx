@@ -3,10 +3,10 @@ import { useState } from 'react'
 import type { Transaction } from '@/utils/types'
 import { TransactionsFilters } from './-components/transactions-filters'
 import { TransactionsHeader } from './-components/transactions-header'
+import { TransactionsModals } from './-components/transactions-modals'
 import { TransactionsPagination } from './-components/transactions-pagination'
 import { TransactionsTable } from './-components/transactions-table'
 import { useTransactionsController } from './-hooks/use-transactions-controller'
-import { TransactionsModals } from './-components/transactions-modals'
 
 export const Route = createFileRoute('/_protected/transactions/')({
   component: TransactionsPage

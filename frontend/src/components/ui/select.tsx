@@ -25,7 +25,7 @@ export function Select({
   icon: Icon,
   error,
   hint,
-  placeholder = 'Selecione uma opção',
+  placeholder = 'Selecione',
   disabled,
   className = '',
   options,

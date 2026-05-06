@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react'
-import { useEffect } from 'react'
+import { ArrowDownCircleIcon, ArrowUpCircleIcon } from 'lucide-react'
+import { useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -70,10 +70,12 @@ export function TransactionModal({
       value: category.id
     })) ?? []
 
+  const today = useMemo(() => new Date().toISOString().split('T')[0], [])
+
   return (
     <Modal
       title={initialData ? 'Alterar transação' : 'Nova transação'}
-      description="Gerencie seus gastos e ganhos"
+      description="Registre sua despesa ou receita"
       open={open}
       onOpenChange={onOpenChange}
       trigger={trigger}
@@ -96,7 +98,7 @@ export function TransactionModal({
                         : 'border-gray-200 text-gray-500 hover:border-gray-300'
                     }`}
                   >
-                    <ArrowDownIcon className="size-4" />
+                    <ArrowDownCircleIcon className="size-4" />
                     <span>Despesa</span>
                   </button>
                   <button
@@ -108,7 +110,7 @@ export function TransactionModal({
                         : 'border-gray-200 text-gray-500 hover:border-gray-300'
                     }`}
                   >
-                    <ArrowUpIcon className="size-4" />
+                    <ArrowUpCircleIcon className="size-4" />
                     <span>Receita</span>
                   </button>
                 </div>
@@ -121,7 +123,7 @@ export function TransactionModal({
 
           <Input
             label="Descrição"
-            placeholder="Ex: Aluguel"
+            placeholder="Ex: Almoço no restaurante"
             error={errors.description?.message}
             disabled={isSubmitting}
             {...register('description')}
@@ -129,8 +131,9 @@ export function TransactionModal({
 
           <div className="grid grid-cols-2 gap-4">
             <Input
+              type="date"
               label="Data"
-              placeholder="00/00/0000"
+              max={today}
               error={errors.date?.message}
               disabled={isSubmitting}
               {...register('date')}
@@ -138,6 +141,7 @@ export function TransactionModal({
 
             <Input
               label="Valor"
+              textIcon="R$"
               placeholder="0,00"
               type="number"
               step="0.01"
