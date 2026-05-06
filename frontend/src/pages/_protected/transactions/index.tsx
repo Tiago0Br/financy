@@ -52,6 +52,8 @@ function TransactionsPage() {
           totalCount={transactionData?.totalCount ?? 0}
           currentPage={transactionData?.pageInfo.currentPage ?? 1}
           totalPages={transactionData?.pageInfo.totalPages ?? 1}
+          rangeStart={transactionData?.pageInfo.rangeStart ?? 1}
+          rangeEnd={transactionData?.pageInfo.rangeEnd ?? 1}
           onPageChange={(page) => handleChangeFilters('page', page)}
         />
       </div>

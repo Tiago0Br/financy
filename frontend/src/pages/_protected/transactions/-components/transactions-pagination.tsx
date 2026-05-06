@@ -4,6 +4,8 @@ interface TransactionsPaginationProps {
   totalCount: number
   currentPage: number
   totalPages: number
+  rangeStart: number
+  rangeEnd: number
   onPageChange: (page: number) => void
 }
 
@@ -11,21 +13,19 @@ export function TransactionsPagination({
   totalCount,
   currentPage,
   totalPages,
+  rangeStart,
+  rangeEnd,
   onPageChange
 }: TransactionsPaginationProps) {
   const pageButtons = Array.from(
     { length: totalPages },
     (_, i) => i + 1
-  ).filter((page) => page >= currentPage && page < currentPage + 3)
-
-  const initalPosition = (currentPage - 1) * 10 + 1
-  const finalPosition =
-    currentPage === totalPages ? totalCount : currentPage * 10
+  ).filter((page) => page >= currentPage - 1 && page <= currentPage + 1)
 
   return (
     <div className="px-6 py-4 flex items-center justify-between bg-white border-t border-gray-200">
       <span className="text-gray-700 text-sm">
-        {initalPosition} a {finalPosition} | {totalCount} resultados
+        {rangeStart} a {rangeEnd} | {totalCount} resultados
       </span>
 
       <div className="flex items-center gap-2">

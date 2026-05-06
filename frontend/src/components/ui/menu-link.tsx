@@ -11,7 +11,7 @@ export function MenuLink({ children, to, ...props }: MenuLinkProps) {
       to={to}
       activeProps={{ className: 'text-brand-base' }}
       inactiveProps={{ className: 'text-gray-600' }}
-      activeOptions={{ exact: true }}
+      activeOptions={{ exact: true, includeSearch: false }}
       className="text-sm font-semibold hover:text-brand-base hover:underline"
       {...props}
     >
