@@ -12,6 +12,7 @@ import {
   FindTransactionsInput,
   UpdateTransactionInput
 } from '@/dtos/input/transaction.input.js'
+import { PaginatedTransactions } from '@/dtos/output/transaction.output.js'
 import type { User } from '@/generated/prisma/client.js'
 import { GqlUser } from '@/graphql/decorators/user.decorator.js'
 import { IsAuth } from '@/middlewares/auth.middleware.js'
@@ -43,7 +44,7 @@ export class TransactionResolver {
     return this.transactionService.create(data, user.id)
   }
 
-  @Query(() => [TransactionModel])
+  @Query(() => PaginatedTransactions)
   async listTransactions(
     @Arg('data', () => FindTransactionsInput) data: FindTransactionsInput,
     @GqlUser() user: User

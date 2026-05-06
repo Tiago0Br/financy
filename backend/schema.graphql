@@ -38,7 +38,9 @@ scalar DateTimeISO
 input FindTransactionsInput {
   categoryId: String
   description: String
+  limit: Float
   month: Float
+  page: Float
   type: TransactionType
   year: Float
 }
@@ -66,11 +68,26 @@ type Mutation {
   updateUser(data: UpdateUserInput!): UserModel!
 }
 
+type PageInfo {
+  currentPage: Int!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  rangeEnd: Int!
+  rangeStart: Int!
+  totalPages: Int!
+}
+
+type PaginatedTransactions {
+  items: [TransactionModel!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type Query {
   getCategoryById(id: String!): CategoryModel!
   getTransactionByID(id: String!): TransactionModel!
   listCategories: [CategoryModel!]!
-  listTransactions(data: FindTransactionsInput!): [TransactionModel!]!
+  listTransactions(data: FindTransactionsInput!): PaginatedTransactions!
 }
 
 input RegisterInput {

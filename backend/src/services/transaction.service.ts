@@ -4,6 +4,7 @@ import type {
   FindTransactionsInput,
   UpdateTransactionInput
 } from '@/dtos/input/transaction.input.js'
+import type { PaginatedTransactions } from '@/dtos/output/transaction.output.js'
 import { prisma } from '@/lib/prisma.js'
 
 export class TransactionService {
@@ -20,8 +21,19 @@ export class TransactionService {
     })
   }
 
-  async findMany(filters: FindTransactionsInput, userId: string) {
-    const { month, year, description, type, categoryId } = filters
+  async findMany(
+    filters: FindTransactionsInput,
+    userId: string
+  ): Promise<PaginatedTransactions> {
+    const {
+      month,
+      year,
+      description,
+      type,
+      categoryId,
+      page = 1,
+      limit = 10
+    } = filters
 
     let dateRange = {}
 
@@ -34,17 +46,47 @@ export class TransactionService {
       }
     }
 
-    return prisma.transaction.findMany({
-      where: {
-        userId,
-        description: {
-          contains: description
-        },
-        type: type,
-        categoryId: categoryId,
-        date: dateRange
+    const where = {
+      userId,
+      description: {
+        contains: description
+      },
+      type: type,
+      categoryId: categoryId,
+      date: dateRange
+    }
+
+    const skip = (page - 1) * limit
+    const take = limit
+
+    const [items, totalCount] = await prisma.$transaction([
+      prisma.transaction.findMany({
+        where,
+        skip,
+        take,
+        orderBy: {
+          date: 'desc'
+        }
+      }),
+      prisma.transaction.count({ where })
+    ])
+
+    const totalPages = Math.ceil(totalCount / limit)
+    const rangeStart = totalCount > 0 ? skip + 1 : 0
+    const rangeEnd = Math.min(skip + limit, totalCount)
+
+    return {
+      items,
+      totalCount,
+      pageInfo: {
+        currentPage: page,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+        rangeStart,
+        rangeEnd
       }
-    })
+    }
   }
 
   async getById(transactionId: string, userId: string) {
