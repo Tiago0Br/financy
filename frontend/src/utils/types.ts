@@ -25,17 +25,18 @@ export interface Category {
   updatedAt: string
 }
 
-export type TransactionType = 'INCOME' | 'EXPENSE'
+export type TransactionType = 'INCOME' | 'OUTCOME'
 
 export interface Transaction {
   id: string
+  type: TransactionType
   description: string
+  amount: number
   date: string
   category: {
-    name: string
+    id: string
+    title: string
     color: CategoryColor
     icon: string
   }
-  type: TransactionType
-  amount: number
 }

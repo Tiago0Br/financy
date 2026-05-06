@@ -42,7 +42,7 @@ export function TransactionModal({
   } = useForm<CreateTransactionFormData>({
     resolver: zodResolver(createTransactionSchema),
     defaultValues: initialData ?? {
-      type: 'EXPENSE',
+      type: 'OUTCOME',
       description: '',
       date: '',
       amount: 0,
@@ -54,7 +54,7 @@ export function TransactionModal({
     if (open) {
       reset(
         initialData ?? {
-          type: 'EXPENSE',
+          type: 'OUTCOME',
           description: '',
           date: '',
           amount: 0,
@@ -91,9 +91,9 @@ export function TransactionModal({
                 <div className="grid grid-cols-2 gap-4">
                   <button
                     type="button"
-                    onClick={() => field.onChange('EXPENSE')}
+                    onClick={() => field.onChange('OUTCOME')}
                     className={`flex items-center justify-center gap-2 h-11 rounded-lg border transition-all cursor-pointer ${
-                      field.value === 'EXPENSE'
+                      field.value === 'OUTCOME'
                         ? 'border-red-base bg-red-base/10 text-red-base'
                         : 'border-gray-200 text-gray-500 hover:border-gray-300'
                     }`}

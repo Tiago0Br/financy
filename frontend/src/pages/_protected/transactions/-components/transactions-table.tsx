@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import {
   CircleArrowDownIcon,
   CircleArrowUpIcon,
@@ -32,7 +33,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
             const Icon = getCategoryIcon(transaction.category.icon)
             const variant =
               colorVariants[transaction.category.color as CategoryColor]
-            const isExpense = transaction.type === 'EXPENSE'
+            const isOutcome = transaction.type === 'OUTCOME'
 
             return (
               <tr
@@ -52,17 +53,17 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                   </div>
                 </td>
                 <td className="px-6 py-4 text-gray-600 text-sm">
-                  {transaction.date}
+                  {format(transaction.date, 'dd/MM/yyyy')}
                 </td>
                 <td className="px-6 py-4">
                   <span
                     className={`rounded-xl py-1 px-2 ${variant.tagBg} ${variant.tagText} text-sm whitespace-nowrap`}
                   >
-                    {transaction.category.name}
+                    {transaction.category.title}
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  {isExpense ? (
+                  {isOutcome ? (
                     <div className="flex items-center gap-2 font-medium">
                       <CircleArrowDownIcon className="size-4 text-red-base" />
                       <span className="text-red-dark text-sm">Saída</span>
@@ -75,9 +76,9 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                   )}
                 </td>
                 <td
-                  className={`px-6 py-4 font-semibold ${isExpense ? 'text-danger' : 'text-success'}`}
+                  className={`px-6 py-4 font-semibold ${isOutcome ? 'text-danger' : 'text-success'}`}
                 >
-                  {isExpense ? '-' : '+'}{' '}
+                  {isOutcome ? '-' : '+'}{' '}
                   {transaction.amount.toLocaleString('pt-BR', {
                     style: 'currency',
                     currency: 'BRL'

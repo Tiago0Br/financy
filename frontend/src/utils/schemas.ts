@@ -27,7 +27,7 @@ export const updateCategorySchema = z.object({
 export type UpdateCategoryFormData = z.infer<typeof updateCategorySchema>
 
 export const createTransactionSchema = z.object({
-  type: z.enum(['INCOME', 'EXPENSE'], {
+  type: z.enum(['INCOME', 'OUTCOME'], {
     errorMap: () => ({ message: 'Selecione o tipo da transação' })
   }),
   description: z.string().min(1, 'A descrição é obrigatória'),

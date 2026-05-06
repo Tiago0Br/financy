@@ -38,7 +38,9 @@ scalar DateTimeISO
 input FindTransactionsInput {
   categoryId: String
   description: String
+  month: Float
   type: TransactionType
+  year: Float
 }
 
 input LoginInput {
