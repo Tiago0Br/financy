@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './pages/__root'
 import { Route as ProtectedRouteImport } from './pages/_protected'
 import { Route as AuthRouteImport } from './pages/_auth'
 import { Route as ProtectedIndexRouteImport } from './pages/_protected/index'
+import { Route as ProtectedUserIndexRouteImport } from './pages/_protected/user/index'
 import { Route as ProtectedTransactionsIndexRouteImport } from './pages/_protected/transactions/index'
 import { Route as ProtectedCategoriesIndexRouteImport } from './pages/_protected/categories/index'
 import { Route as AuthRegisterIndexRouteImport } from './pages/_auth/register/index'
@@ -28,6 +29,11 @@ const AuthRoute = AuthRouteImport.update({
 const ProtectedIndexRoute = ProtectedIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedUserIndexRoute = ProtectedUserIndexRouteImport.update({
+  id: '/user/',
+  path: '/user/',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedTransactionsIndexRoute =
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/register/': typeof AuthRegisterIndexRoute
   '/categories/': typeof ProtectedCategoriesIndexRoute
   '/transactions/': typeof ProtectedTransactionsIndexRoute
+  '/user/': typeof ProtectedUserIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof ProtectedIndexRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/register': typeof AuthRegisterIndexRoute
   '/categories': typeof ProtectedCategoriesIndexRoute
   '/transactions': typeof ProtectedTransactionsIndexRoute
+  '/user': typeof ProtectedUserIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -76,12 +84,19 @@ export interface FileRoutesById {
   '/_auth/register/': typeof AuthRegisterIndexRoute
   '/_protected/categories/': typeof ProtectedCategoriesIndexRoute
   '/_protected/transactions/': typeof ProtectedTransactionsIndexRoute
+  '/_protected/user/': typeof ProtectedUserIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login/' | '/register/' | '/categories/' | '/transactions/'
+  fullPaths:
+    | '/'
+    | '/login/'
+    | '/register/'
+    | '/categories/'
+    | '/transactions/'
+    | '/user/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/categories' | '/transactions'
+  to: '/' | '/login' | '/register' | '/categories' | '/transactions' | '/user'
   id:
     | '__root__'
     | '/_auth'
@@ -91,6 +106,7 @@ export interface FileRouteTypes {
     | '/_auth/register/'
     | '/_protected/categories/'
     | '/_protected/transactions/'
+    | '/_protected/user/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof ProtectedIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/user/': {
+      id: '/_protected/user/'
+      path: '/user'
+      fullPath: '/user/'
+      preLoaderRoute: typeof ProtectedUserIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/transactions/': {
@@ -168,12 +191,14 @@ interface ProtectedRouteChildren {
   ProtectedIndexRoute: typeof ProtectedIndexRoute
   ProtectedCategoriesIndexRoute: typeof ProtectedCategoriesIndexRoute
   ProtectedTransactionsIndexRoute: typeof ProtectedTransactionsIndexRoute
+  ProtectedUserIndexRoute: typeof ProtectedUserIndexRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedIndexRoute: ProtectedIndexRoute,
   ProtectedCategoriesIndexRoute: ProtectedCategoriesIndexRoute,
   ProtectedTransactionsIndexRoute: ProtectedTransactionsIndexRoute,
+  ProtectedUserIndexRoute: ProtectedUserIndexRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
