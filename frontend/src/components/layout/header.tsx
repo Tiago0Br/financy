@@ -1,12 +1,18 @@
+import { Link } from '@tanstack/react-router'
 import { MenuIcon, XIcon } from 'lucide-react'
 import { useState } from 'react'
+import { useAuthStore } from '@/store/auth'
+import { getInitials } from '@/utils/get-initials'
 import { MenuLink } from '../ui/menu-link'
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const user = useAuthStore((state) => state.user)
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev)
   const closeMenu = () => setIsMenuOpen(false)
+
+  const initials = getInitials(user?.name)
 
   return (
     <header className="bg-white border-b border-gray-200 flex items-center justify-between py-4 px-6 md:px-12 relative z-50">
@@ -23,9 +29,12 @@ export function Header() {
         <MenuLink to="/categories">Categorias</MenuLink>
       </nav>
 
-      <div className="hidden md:flex bg-gray-300 rounded-full size-9 items-center justify-center text-gray-800">
-        TL
-      </div>
+      <Link
+        to="/user"
+        className="hidden md:flex bg-gray-300 rounded-full size-9 items-center justify-center text-gray-800 hover:opacity-80 transition-opacity"
+      >
+        {initials}
+      </Link>
 
       <button
         type="button"
@@ -42,12 +51,16 @@ export function Header() {
 
       {isMenuOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-lg flex flex-col p-6 gap-6 animate-in slide-in-from-top-2 duration-200">
-          <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
+          <Link
+            to="/user"
+            onClick={closeMenu}
+            className="flex items-center gap-3 border-b border-gray-100 pb-4"
+          >
             <div className="bg-gray-300 rounded-full size-10 flex items-center justify-center text-gray-800 font-medium">
-              TL
+              {initials}
             </div>
-            <span className="text-gray-800 font-semibold">Tiago Lopes</span>
-          </div>
+            <span className="text-gray-800 font-semibold">{user?.name}</span>
+          </Link>
 
           <nav className="flex flex-col gap-4">
             <MenuLink to="/" onClick={closeMenu}>

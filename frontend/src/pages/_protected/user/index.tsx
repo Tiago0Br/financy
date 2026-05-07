@@ -1,33 +1,37 @@
+import { useMutation, useQuery } from '@apollo/client/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { LogOutIcon, MailIcon, UserIcon } from 'lucide-react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import z from 'zod/v3'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { UPDATE_USER } from '@/lib/graphql/mutations/user'
+import { GET_USER } from '@/lib/graphql/queries/user'
 import { useAuthStore } from '@/store/auth'
+import { getInitials } from '@/utils/get-initials'
+import { type UserSchema, userSchema } from '@/utils/schemas'
+import type { User } from '@/utils/types'
 
 export const Route = createFileRoute('/_protected/user/')({
   component: UserPage
 })
 
-const userSchema = z.object({
-  name: z.string().nonempty('O nome deve ser informado'),
-  email: z.string().email('E-mail inválido')
-})
-
-type UserSchema = z.infer<typeof userSchema>
-
 function UserPage() {
   const user = useAuthStore((state) => state.user)
   const logout = useAuthStore((state) => state.logout)
+  const setUser = useAuthStore((state) => state.setUser)
   const navigate = useNavigate()
+
+  const { data, loading: isLoadingUser } = useQuery<{ getUser: User }>(GET_USER)
+  const [updateUser, { loading: isUpdatingUser }] = useMutation(UPDATE_USER)
 
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors }
   } = useForm<UserSchema>({
     resolver: zodResolver(userSchema),
@@ -37,6 +41,16 @@ function UserPage() {
     }
   })
 
+  useEffect(() => {
+    if (data?.getUser) {
+      reset({
+        name: data.getUser.name,
+        email: data.getUser.email
+      })
+      setUser(data.getUser)
+    }
+  }, [data, reset, setUser])
+
   const nameValue = watch('name')
 
   function handleLogout() {
@@ -45,21 +59,30 @@ function UserPage() {
     toast.success('Logout efetuado com sucesso!')
   }
 
-  async function onSubmit(data: UserSchema) {
-    console.log('Update user data:', data)
-    toast.info(
-      'A funcionalidade de salvar alterações será implementada em breve.'
-    )
+  async function onSubmit(formData: UserSchema) {
+    try {
+      await updateUser({
+        variables: {
+          data: {
+            name: formData.name
+          }
+        }
+      })
+
+      if (user) {
+        setUser({
+          ...user,
+          name: formData.name
+        })
+      }
+
+      toast.success('Perfil atualizado com sucesso!')
+    } catch (_error) {
+      toast.error('Erro ao atualizar perfil. Tente novamente.')
+    }
   }
 
-  const initials = user?.name
-    ? user.name
-        .split(' ')
-        .map((n) => n[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2)
-    : '??'
+  const initials = getInitials(user?.name)
 
   return (
     <div className="pt-12 px-2 md:px-0 flex flex-col items-center gap-8">
@@ -86,6 +109,7 @@ function UserPage() {
               error={errors.name?.message}
               isFilled={!!nameValue}
               placeholder="Seu nome"
+              disabled={isLoadingUser || isUpdatingUser}
               {...register('name')}
             />
 
@@ -102,13 +126,16 @@ function UserPage() {
           </div>
 
           <div className="space-y-3">
-            <Button type="submit">Salvar alterações</Button>
+            <Button type="submit" isLoading={isUpdatingUser}>
+              Salvar alterações
+            </Button>
 
             <Button
               type="button"
               variant="outline"
               icon={LogOutIcon}
               onClick={handleLogout}
+              disabled={isUpdatingUser}
             >
               Sair da conta
             </Button>

@@ -65,3 +65,10 @@ export const transactionsSearchSchema = z.object({
     .default(new Date().getFullYear()),
   page: z.number().optional().catch(1).default(1)
 })
+
+export const userSchema = z.object({
+  name: z.string().min(1, 'O nome deve ser informado'),
+  email: z.string().email('E-mail inválido')
+})
+
+export type UserSchema = z.infer<typeof userSchema>

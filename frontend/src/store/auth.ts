@@ -46,7 +46,10 @@ interface AuthState {
   register: (data: RegisterInput) => Promise<boolean>
   login: (data: LoginInput) => Promise<boolean>
   logout: () => void
+  setUser: (user: User) => void
 }
+
+const AUTH_STORAGE_NAME = '@financy:auth-storage'
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -54,6 +57,7 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       isAuthenticated: false,
+      setUser: (user: User) => set({ user }),
       async login(loginData: LoginInput) {
         try {
           const { data } = await apolloClient.mutate<
@@ -136,7 +140,7 @@ export const useAuthStore = create<AuthState>()(
       }
     }),
     {
-      name: '@financy:auth-storage'
+      name: AUTH_STORAGE_NAME
     }
   )
 )
