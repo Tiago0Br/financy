@@ -6,11 +6,11 @@ import type { Category } from '@/utils/types'
 
 interface TransactionsFiltersProps {
   filters: {
-    description: string
-    type: string
-    categoryId: string
-    month: number
-    year: number
+    description?: string
+    type?: string
+    categoryId?: string
+    month?: number
+    year?: number
   }
   categories: Category[]
   onChange: (name: string, value: string | number) => void

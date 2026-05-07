@@ -21,9 +21,9 @@ import type {
 import { useDebounce } from '@/utils/use-debounce'
 
 interface Filters {
-  description: string
-  type: string
-  categoryId: string
+  description?: string
+  type?: string
+  categoryId?: string
   month: number
   year: number
   page: number

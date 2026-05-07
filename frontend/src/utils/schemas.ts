@@ -50,9 +50,9 @@ export const updateTransactionSchema = z.object({
 export type UpdateTransactionFormData = z.infer<typeof updateTransactionSchema>
 
 export const transactionsSearchSchema = z.object({
-  description: z.string().optional().catch('').default(''),
-  type: z.string().optional().catch('ALL').default('ALL'),
-  categoryId: z.string().optional().catch('ALL').default('ALL'),
+  description: z.string().optional().catch('').optional(),
+  type: z.string().optional().catch('ALL').optional(),
+  categoryId: z.string().optional().catch('ALL').optional(),
   month: z
     .number()
     .optional()
