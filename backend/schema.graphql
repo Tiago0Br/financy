@@ -86,6 +86,7 @@ type PaginatedTransactions {
 type Query {
   getCategoryById(id: String!): CategoryModel!
   getTransactionByID(id: String!): TransactionModel!
+  getUser: UserModel!
   listCategories: [CategoryModel!]!
   listTransactions(data: FindTransactionsInput!): PaginatedTransactions!
 }

@@ -1,4 +1,4 @@
-import { Arg, Mutation, Resolver, UseMiddleware } from 'type-graphql'
+import { Arg, Mutation, Query, Resolver, UseMiddleware } from 'type-graphql'
 import { UpdateUserInput } from '@/dtos/input/user.input.js'
 import type { User } from '@/generated/prisma/client.js'
 import { GqlUser } from '@/graphql/decorators/user.decorator.js'
@@ -21,5 +21,10 @@ export class UserResolver {
     @GqlUser() user: User
   ) {
     return this.userService.update(data, user.id)
+  }
+
+  @Query(() => UserModel)
+  async getUser(@GqlUser() user: User) {
+    return user
   }
 }
