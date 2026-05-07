@@ -12,7 +12,11 @@ import {
   FindTransactionsInput,
   UpdateTransactionInput
 } from '@/dtos/input/transaction.input.js'
-import { PaginatedTransactions } from '@/dtos/output/transaction.output.js'
+import { TopCategory } from '@/dtos/output/category.output.js'
+import {
+  DashboardStats,
+  PaginatedTransactions
+} from '@/dtos/output/transaction.output.js'
 import type { User } from '@/generated/prisma/client.js'
 import { GqlUser } from '@/graphql/decorators/user.decorator.js'
 import { IsAuth } from '@/middlewares/auth.middleware.js'
@@ -50,6 +54,21 @@ export class TransactionResolver {
     @GqlUser() user: User
   ) {
     return this.transactionService.findMany(data, user.id)
+  }
+
+  @Query(() => [TransactionModel])
+  async recentTransactions(@GqlUser() user: User) {
+    return this.transactionService.findRecent(user.id)
+  }
+
+  @Query(() => DashboardStats)
+  async dashboardStats(@GqlUser() user: User) {
+    return this.transactionService.getDashboardStats(user.id)
+  }
+
+  @Query(() => [TopCategory])
+  async topCategories(@GqlUser() user: User) {
+    return this.transactionService.getTopCategories(user.id)
   }
 
   @Query(() => TransactionModel)

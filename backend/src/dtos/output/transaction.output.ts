@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from 'type-graphql'
+import { Field, Float, Int, ObjectType } from 'type-graphql'
 import { TransactionModel } from '@/models/transaction.model.js'
 
 @ObjectType()
@@ -32,4 +32,16 @@ export class PaginatedTransactions {
 
   @Field(() => PageInfo)
   pageInfo!: PageInfo
+}
+
+@ObjectType()
+export class DashboardStats {
+  @Field(() => Float)
+  totalBalance!: number
+
+  @Field(() => Float)
+  monthlyIncome!: number
+
+  @Field(() => Float)
+  monthlyOutcome!: number
 }

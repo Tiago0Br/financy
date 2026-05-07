@@ -89,6 +89,107 @@ export class TransactionService {
     }
   }
 
+  async findRecent(userId: string, limit = 5) {
+    return prisma.transaction.findMany({
+      where: {
+        userId
+      },
+      orderBy: {
+        date: 'desc'
+      },
+      take: limit
+    })
+  }
+
+  async getDashboardStats(userId: string) {
+    const now = new Date()
+    const monthStart = startOfMonth(now)
+    const monthEnd = endOfMonth(now)
+
+    const [totalIncome, totalOutcome, monthlyIncome, monthlyOutcome] =
+      await prisma.$transaction([
+        prisma.transaction.aggregate({
+          _sum: { amount: true },
+          where: { userId, type: 'INCOME' }
+        }),
+        prisma.transaction.aggregate({
+          _sum: { amount: true },
+          where: { userId, type: 'OUTCOME' }
+        }),
+        prisma.transaction.aggregate({
+          _sum: { amount: true },
+          where: {
+            userId,
+            type: 'INCOME',
+            date: { gte: monthStart, lte: monthEnd }
+          }
+        }),
+        prisma.transaction.aggregate({
+          _sum: { amount: true },
+          where: {
+            userId,
+            type: 'OUTCOME',
+            date: { gte: monthStart, lte: monthEnd }
+          }
+        })
+      ])
+
+    const totalIncomeAmount = totalIncome._sum.amount || 0
+    const totalOutcomeAmount = totalOutcome._sum.amount || 0
+
+    return {
+      totalBalance: totalIncomeAmount - totalOutcomeAmount,
+      monthlyIncome: monthlyIncome._sum.amount || 0,
+      monthlyOutcome: monthlyOutcome._sum.amount || 0
+    }
+  }
+
+  async getTopCategories(userId: string) {
+    const now = new Date()
+    const monthStart = startOfMonth(now)
+    const monthEnd = endOfMonth(now)
+
+    const aggregatedData = await prisma.transaction.groupBy({
+      by: ['categoryId'],
+      _count: { id: true },
+      _sum: { amount: true },
+      where: {
+        userId,
+        date: { gte: monthStart, lte: monthEnd }
+      },
+      orderBy: {
+        _count: { id: 'desc' }
+      },
+      take: 5
+    })
+
+    if (aggregatedData.length === 0) {
+      return []
+    }
+
+    const categoryIds = aggregatedData.map((data) => data.categoryId)
+    const categories = await prisma.category.findMany({
+      where: {
+        id: { in: categoryIds },
+        userId
+      }
+    })
+
+    return aggregatedData.map((data) => {
+      const category = categories.find((c) => c.id === data.categoryId)
+
+      if (!category) {
+        throw new Error(`Category ${data.categoryId} not found`)
+      }
+
+      return {
+        category,
+        transactionCount: data._count.id,
+        totalAmount: data._sum.amount || 0
+      }
+    })
+  }
+
   async getById(transactionId: string, userId: string) {
     const transaction = await prisma.transaction.findUnique({
       where: {
