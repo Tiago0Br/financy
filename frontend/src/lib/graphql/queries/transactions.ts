@@ -28,3 +28,31 @@ export const LIST_TRANSACTIONS = gql`
     }
   }
 `
+
+export const LIST_RECENT_TRANSACTIONS = gql`
+  query ListRecentTransactions {
+    recentTransactions {
+      id
+      type
+      description
+      amount
+      date
+      category {
+        id
+        title
+        color
+        icon
+      }
+    }
+  }
+`
+
+export const GET_TRANSACTIONS_STATS = gql`
+  query GetDashboardStats {
+    dashboardStats {
+      monthlyIncome
+      monthlyOutcome
+      totalBalance
+    }
+  }
+`

@@ -1,9 +1,9 @@
-import type { ElementType } from 'react'
+import type { ElementType, ReactNode } from 'react'
 
 interface SummaryCardProps {
   icon: ElementType
   label: string
-  value: string
+  value: ReactNode
   iconClassName?: string
 }
 

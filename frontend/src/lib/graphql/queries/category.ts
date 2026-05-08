@@ -18,3 +18,17 @@ export const LIST_CATEGORIES = gql`
     }
   }
 `
+
+export const GET_TOP_CATEGORIES = gql`
+  query GetTopCategories {
+    topCategories {
+      category {
+        id
+        title
+        color
+      }
+      totalAmount
+      transactionCount
+    }
+  }
+`
