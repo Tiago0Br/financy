@@ -1,6 +1,7 @@
 import {
   Arg,
   FieldResolver,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -17,6 +18,7 @@ import { IsAuth } from '@/middlewares/auth.middleware.js'
 import { CategoryModel } from '@/models/category.model.js'
 import { UserModel } from '@/models/user.model.js'
 import { CategoryService } from '@/services/category.service.js'
+import { TransactionService } from '@/services/transaction.service.js'
 import { UserService } from '@/services/user.service.js'
 
 @Resolver(() => CategoryModel)
@@ -24,10 +26,12 @@ import { UserService } from '@/services/user.service.js'
 export class CategoryResolver {
   private readonly categoryService: CategoryService
   private readonly userService: UserService
+  private readonly transactionService: TransactionService
 
   constructor() {
     this.categoryService = new CategoryService()
     this.userService = new UserService()
+    this.transactionService = new TransactionService()
   }
 
   @Mutation(() => CategoryModel)
@@ -72,5 +76,10 @@ export class CategoryResolver {
   @FieldResolver(() => UserModel)
   async user(@Root() category: CategoryModel) {
     return this.userService.getById(category.userId)
+  }
+
+  @FieldResolver(() => Int)
+  async transactionsCount(@Root() category: CategoryModel) {
+    return this.transactionService.countByCategoryId(category.id)
   }
 }

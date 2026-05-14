@@ -190,6 +190,12 @@ export class TransactionService {
     })
   }
 
+  async countByCategoryId(categoryId: string) {
+    return prisma.transaction.count({
+      where: { categoryId }
+    })
+  }
+
   async getById(transactionId: string, userId: string) {
     const transaction = await prisma.transaction.findUnique({
       where: {
