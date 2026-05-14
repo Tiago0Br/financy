@@ -8,7 +8,7 @@ interface CategoryCardProps {
   icon: ElementType
   name: string
   description?: string
-  itemCount: number
+  transactionsCount: number
   color: CategoryColor
   onEdit?: () => void
   onDelete?: () => void
@@ -18,7 +18,7 @@ export function CategoryCard({
   icon: Icon,
   name,
   description,
-  itemCount,
+  transactionsCount,
   color,
   onEdit,
   onDelete
@@ -54,7 +54,7 @@ export function CategoryCard({
           {name}
         </span>
 
-        <span className="text-sm text-gray-600">{itemCount} itens</span>
+        <span className="text-sm text-gray-600">{transactionsCount} itens</span>
       </div>
     </div>
   )

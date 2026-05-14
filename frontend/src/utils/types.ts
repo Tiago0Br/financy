@@ -19,7 +19,7 @@ export interface Category {
   description?: string
   icon: string
   color: string
-  userId: string
+  transactionsCount: number
   user: User
   createdAt: string
   updatedAt: string

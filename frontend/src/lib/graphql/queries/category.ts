@@ -8,7 +8,7 @@ export const LIST_CATEGORIES = gql`
       description
       icon
       color
-      userId
+      transactionsCount
       user {
         id
         name

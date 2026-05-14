@@ -34,7 +34,7 @@ export function CategoriesGrid({
           icon={getCategoryIcon(category.icon)}
           name={category.title}
           description={category.description}
-          itemCount={0}
+          transactionsCount={category.transactionsCount}
           color={category.color as CategoryColor}
           onEdit={() => onOpenEdit(category)}
           onDelete={() => onOpenDelete(category)}
