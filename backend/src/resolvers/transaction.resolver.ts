@@ -23,29 +23,39 @@ import { IsAuth } from '@/middlewares/auth.middleware.js'
 import { CategoryModel } from '@/models/category.model.js'
 import { TransactionModel } from '@/models/transaction.model.js'
 import { UserModel } from '@/models/user.model.js'
-import { CategoryService } from '@/services/category.service.js'
-import { TransactionService } from '@/services/transaction.service.js'
-import { UserService } from '@/services/user.service.js'
+import { GetCategoryByIdUseCase } from '@/use-cases/categories/get-category-by-id.js'
+import { CreateTransactionUseCase } from '@/use-cases/transactions/create-transaction.js'
+import { DeleteTransactionUseCase } from '@/use-cases/transactions/delete-transaction.js'
+import { FindManyTransactionsUseCase } from '@/use-cases/transactions/find-many-transactions.js'
+import { FindRecentTransactionsUseCase } from '@/use-cases/transactions/find-recent-transactions.js'
+import { GetDashboardStatsUseCase } from '@/use-cases/transactions/get-dashboard-stats.js'
+import { GetTopCategoriesUseCase } from '@/use-cases/transactions/get-top-categories.js'
+import { GetTransactionByIdUseCase } from '@/use-cases/transactions/get-transaction-by-id.js'
+import { UpdateTransactionUseCase } from '@/use-cases/transactions/update-transaction.js'
+import { GetUserByIdUseCase as GetUserByIdFromUsersUseCase } from '@/use-cases/users/get-user-by-id.js'
 
 @Resolver(() => TransactionModel)
 @UseMiddleware(IsAuth)
 export class TransactionResolver {
-  private readonly transactionService: TransactionService
-  private readonly userService: UserService
-  private readonly categoryService: CategoryService
-
-  constructor() {
-    this.transactionService = new TransactionService()
-    this.userService = new UserService()
-    this.categoryService = new CategoryService()
-  }
+  private readonly getUserByIdUseCase = new GetUserByIdFromUsersUseCase()
+  private readonly createTransactionUseCase = new CreateTransactionUseCase()
+  private readonly findManyTransactionsUseCase =
+    new FindManyTransactionsUseCase()
+  private readonly findRecentTransactionsUseCase =
+    new FindRecentTransactionsUseCase()
+  private readonly getDashboardStatsUseCase = new GetDashboardStatsUseCase()
+  private readonly getTopCategoriesUseCase = new GetTopCategoriesUseCase()
+  private readonly getTransactionByIdUseCase = new GetTransactionByIdUseCase()
+  private readonly updateTransactionUseCase = new UpdateTransactionUseCase()
+  private readonly deleteTransactionUseCase = new DeleteTransactionUseCase()
+  private readonly getCategoryByIdUseCase = new GetCategoryByIdUseCase()
 
   @Mutation(() => TransactionModel)
   async createTransaction(
     @Arg('data', () => CreateTransactionInput) data: CreateTransactionInput,
     @GqlUser() user: User
   ) {
-    return this.transactionService.create(data, user.id)
+    return this.createTransactionUseCase.execute(data, user.id)
   }
 
   @Query(() => PaginatedTransactions)
@@ -53,22 +63,22 @@ export class TransactionResolver {
     @Arg('data', () => FindTransactionsInput) data: FindTransactionsInput,
     @GqlUser() user: User
   ) {
-    return this.transactionService.findMany(data, user.id)
+    return this.findManyTransactionsUseCase.execute(data, user.id)
   }
 
   @Query(() => [TransactionModel])
   async recentTransactions(@GqlUser() user: User) {
-    return this.transactionService.findRecent(user.id)
+    return this.findRecentTransactionsUseCase.execute(user.id)
   }
 
   @Query(() => DashboardStats)
   async dashboardStats(@GqlUser() user: User) {
-    return this.transactionService.getDashboardStats(user.id)
+    return this.getDashboardStatsUseCase.execute(user.id)
   }
 
   @Query(() => [TopCategory])
   async topCategories(@GqlUser() user: User) {
-    return this.transactionService.getTopCategories(user.id)
+    return this.getTopCategoriesUseCase.execute(user.id)
   }
 
   @Query(() => TransactionModel)
@@ -76,7 +86,7 @@ export class TransactionResolver {
     @Arg('id', () => String) id: string,
     @GqlUser() user: User
   ) {
-    return this.transactionService.getById(id, user.id)
+    return this.getTransactionByIdUseCase.execute(id, user.id)
   }
 
   @Mutation(() => TransactionModel)
@@ -84,7 +94,7 @@ export class TransactionResolver {
     @Arg('data', () => UpdateTransactionInput) data: UpdateTransactionInput,
     @GqlUser() user: User
   ) {
-    return this.transactionService.update(data, user.id)
+    return this.updateTransactionUseCase.execute(data, user.id)
   }
 
   @Mutation(() => Boolean)
@@ -92,19 +102,19 @@ export class TransactionResolver {
     @Arg('id', () => String) id: string,
     @GqlUser() user: User
   ) {
-    await this.transactionService.delete(id, user.id)
+    await this.deleteTransactionUseCase.execute(id, user.id)
 
     return true
   }
 
   @FieldResolver(() => UserModel)
   async user(@Root() transaction: TransactionModel) {
-    return this.userService.getById(transaction.userId)
+    return this.getUserByIdUseCase.execute(transaction.userId)
   }
 
   @FieldResolver(() => CategoryModel)
   async category(@Root() transaction: TransactionModel) {
-    return this.categoryService.getById(
+    return this.getCategoryByIdUseCase.execute(
       transaction.categoryId,
       transaction.userId
     )

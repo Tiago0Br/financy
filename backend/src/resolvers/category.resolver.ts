@@ -17,34 +17,37 @@ import { GqlUser } from '@/graphql/decorators/user.decorator.js'
 import { IsAuth } from '@/middlewares/auth.middleware.js'
 import { CategoryModel } from '@/models/category.model.js'
 import { UserModel } from '@/models/user.model.js'
-import { CategoryService } from '@/services/category.service.js'
-import { TransactionService } from '@/services/transaction.service.js'
-import { UserService } from '@/services/user.service.js'
+import { CreateCategoryUseCase } from '@/use-cases/categories/create-category.js'
+import { DeleteCategoryUseCase } from '@/use-cases/categories/delete-category.js'
+import { GetCategoryByIdUseCase } from '@/use-cases/categories/get-category-by-id.js'
+import { ListCategoriesUseCase } from '@/use-cases/categories/list-categories.js'
+import { UpdateCategoryUseCase } from '@/use-cases/categories/update-category.js'
+import { CountTransactionsByCategoryUseCase } from '@/use-cases/transactions/count-transactions-by-category.js'
+import { GetUserByIdUseCase } from '@/use-cases/users/get-user-by-id.js'
 
 @Resolver(() => CategoryModel)
 @UseMiddleware(IsAuth)
 export class CategoryResolver {
-  private readonly categoryService: CategoryService
-  private readonly userService: UserService
-  private readonly transactionService: TransactionService
-
-  constructor() {
-    this.categoryService = new CategoryService()
-    this.userService = new UserService()
-    this.transactionService = new TransactionService()
-  }
+  private readonly getUserByIdUseCase = new GetUserByIdUseCase()
+  private readonly createCategoryUseCase = new CreateCategoryUseCase()
+  private readonly listCategoriesUseCase = new ListCategoriesUseCase()
+  private readonly getCategoryByIdUseCase = new GetCategoryByIdUseCase()
+  private readonly updateCategoryUseCase = new UpdateCategoryUseCase()
+  private readonly deleteCategoryUseCase = new DeleteCategoryUseCase()
+  private readonly countTransactionsByCategoryUseCase =
+    new CountTransactionsByCategoryUseCase()
 
   @Mutation(() => CategoryModel)
   async createCategory(
     @Arg('data', () => CreateCategoryInput) data: CreateCategoryInput,
     @GqlUser() user: User
   ) {
-    return this.categoryService.create(data, user.id)
+    return this.createCategoryUseCase.execute(data, user.id)
   }
 
   @Query(() => [CategoryModel])
   async listCategories(@GqlUser() user: User) {
-    return this.categoryService.list(user.id)
+    return this.listCategoriesUseCase.execute(user.id)
   }
 
   @Query(() => CategoryModel)
@@ -52,7 +55,7 @@ export class CategoryResolver {
     @Arg('id', () => String) id: string,
     @GqlUser() user: User
   ) {
-    return this.categoryService.getById(id, user.id)
+    return this.getCategoryByIdUseCase.execute(id, user.id)
   }
 
   @Mutation(() => CategoryModel)
@@ -60,7 +63,7 @@ export class CategoryResolver {
     @Arg('data', () => UpdateCategoryInput) data: UpdateCategoryInput,
     @GqlUser() user: User
   ) {
-    return this.categoryService.update(data, user.id)
+    return this.updateCategoryUseCase.execute(data, user.id)
   }
 
   @Mutation(() => Boolean)
@@ -68,18 +71,18 @@ export class CategoryResolver {
     @Arg('id', () => String) id: string,
     @GqlUser() user: User
   ) {
-    this.categoryService.delete(id, user.id)
+    await this.deleteCategoryUseCase.execute(id, user.id)
 
     return true
   }
 
   @FieldResolver(() => UserModel)
   async user(@Root() category: CategoryModel) {
-    return this.userService.getById(category.userId)
+    return this.getUserByIdUseCase.execute(category.userId)
   }
 
   @FieldResolver(() => Int)
   async transactionsCount(@Root() category: CategoryModel) {
-    return this.transactionService.countByCategoryId(category.id)
+    return this.countTransactionsByCategoryUseCase.execute(category.id)
   }
 }

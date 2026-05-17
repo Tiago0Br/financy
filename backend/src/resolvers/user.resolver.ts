@@ -4,15 +4,15 @@ import type { User } from '@/generated/prisma/client.js'
 import { GqlUser } from '@/graphql/decorators/user.decorator.js'
 import { IsAuth } from '@/middlewares/auth.middleware.js'
 import { UserModel } from '@/models/user.model.js'
-import { UserService } from '@/services/user.service.js'
+import { UpdateUserUseCase } from '@/use-cases/users/update-user.js'
 
 @Resolver(() => UserModel)
 @UseMiddleware(IsAuth)
 export class UserResolver {
-  private readonly userService: UserService
+  private readonly updateUserUseCase: UpdateUserUseCase
 
   constructor() {
-    this.userService = new UserService()
+    this.updateUserUseCase = new UpdateUserUseCase()
   }
 
   @Mutation(() => UserModel)
@@ -20,7 +20,7 @@ export class UserResolver {
     @Arg('data', () => UpdateUserInput) data: UpdateUserInput,
     @GqlUser() user: User
   ) {
-    return this.userService.update(data, user.id)
+    return this.updateUserUseCase.execute(data, user.id)
   }
 
   @Query(() => UserModel)
