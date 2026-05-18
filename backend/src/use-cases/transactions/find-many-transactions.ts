@@ -14,7 +14,7 @@ export class FindManyTransactionsUseCase {
       month: z.number().min(1).max(12).optional(),
       year: z.number().min(2000).max(2100).optional(),
       description: z.string().optional(),
-      type: z.nativeEnum(TransactionType).optional(),
+      type: z.enum(TransactionType).optional(),
       categoryId: z.uuid().optional(),
       page: z.number().min(1).optional().default(1),
       limit: z.number().min(1).max(100).optional().default(10),

@@ -6,7 +6,7 @@ import { TransactionType } from '@/models/transaction.model.js'
 export class CreateTransactionUseCase {
   async execute(data: CreateTransactionInput, userId: string) {
     const schema = z.object({
-      type: z.nativeEnum(TransactionType),
+      type: z.enum(TransactionType),
       description: z.string().min(1).max(255),
       amount: z.number().positive(),
       date: z.date(),

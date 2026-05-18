@@ -7,7 +7,7 @@ export class UpdateTransactionUseCase {
   async execute(data: UpdateTransactionInput, userId: string) {
     const schema = z.object({
       id: z.uuid(),
-      type: z.nativeEnum(TransactionType).optional(),
+      type: z.enum(TransactionType).optional(),
       description: z.string().min(1).max(255).optional(),
       amount: z.number().positive().optional(),
       date: z.date().optional(),
