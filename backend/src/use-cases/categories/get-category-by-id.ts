@@ -1,11 +1,19 @@
+import { z } from 'zod'
 import { prisma } from '@/lib/prisma.js'
 
 export class GetCategoryByIdUseCase {
   async execute(categoryId: string, userId: string) {
+    const schema = z.object({
+      categoryId: z.uuid(),
+      userId: z.uuid()
+    })
+
+    const validatedData = schema.parse({ categoryId, userId })
+
     const category = await prisma.category.findUnique({
       where: {
-        id: categoryId,
-        userId
+        id: validatedData.categoryId,
+        userId: validatedData.userId
       }
     })
 

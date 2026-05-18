@@ -1,8 +1,12 @@
 import { endOfMonth, startOfMonth } from 'date-fns'
+import { z } from 'zod'
 import { prisma } from '@/lib/prisma.js'
 
 export class GetTopCategoriesUseCase {
   async execute(userId: string) {
+    const schema = z.uuid()
+    const validatedUserId = schema.parse(userId)
+
     const now = new Date()
     const monthStart = startOfMonth(now)
     const monthEnd = endOfMonth(now)
@@ -12,7 +16,7 @@ export class GetTopCategoriesUseCase {
       _count: { id: true },
       _sum: { amount: true },
       where: {
-        userId,
+        userId: validatedUserId,
         date: { gte: monthStart, lte: monthEnd }
       },
       orderBy: {
@@ -29,7 +33,7 @@ export class GetTopCategoriesUseCase {
     const categories = await prisma.category.findMany({
       where: {
         id: { in: categoryIds },
-        userId
+        userId: validatedUserId
       }
     })
 

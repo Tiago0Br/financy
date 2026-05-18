@@ -12,7 +12,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.30.2",
+  "packageManager": "pnpm@11.1.2",
   "devDependencies": {
     "@biomejs/biome": "2.4.12",
     "@types/better-sqlite3": "^7.6.13",

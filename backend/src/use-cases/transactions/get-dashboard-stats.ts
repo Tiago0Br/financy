@@ -1,8 +1,12 @@
 import { endOfMonth, startOfMonth } from 'date-fns'
+import { z } from 'zod'
 import { prisma } from '@/lib/prisma.js'
 
 export class GetDashboardStatsUseCase {
   async execute(userId: string) {
+    const schema = z.uuid()
+    const validatedUserId = schema.parse(userId)
+
     const now = new Date()
     const monthStart = startOfMonth(now)
     const monthEnd = endOfMonth(now)
@@ -11,16 +15,16 @@ export class GetDashboardStatsUseCase {
       await prisma.$transaction([
         prisma.transaction.aggregate({
           _sum: { amount: true },
-          where: { userId, type: 'INCOME' }
+          where: { userId: validatedUserId, type: 'INCOME' }
         }),
         prisma.transaction.aggregate({
           _sum: { amount: true },
-          where: { userId, type: 'OUTCOME' }
+          where: { userId: validatedUserId, type: 'OUTCOME' }
         }),
         prisma.transaction.aggregate({
           _sum: { amount: true },
           where: {
-            userId,
+            userId: validatedUserId,
             type: 'INCOME',
             date: { gte: monthStart, lte: monthEnd }
           }
@@ -28,7 +32,7 @@ export class GetDashboardStatsUseCase {
         prisma.transaction.aggregate({
           _sum: { amount: true },
           where: {
-            userId,
+            userId: validatedUserId,
             type: 'OUTCOME',
             date: { gte: monthStart, lte: monthEnd }
           }
