@@ -22,12 +22,13 @@ O projeto segue uma arquitetura modular, organizada da seguinte forma:
 ```text
 src/
 ├── dtos/          # Objetos de Transferência de Dados (Input e Output) para GraphQL
+├── errors/        # Classes de erro customizadas e lógica de formatação
 ├── graphql/       # Contexto e decoradores do GraphQL
 ├── lib/           # Instâncias de bibliotecas compartilhadas (ex: Prisma Client)
-├── middlewares/   # Middlewares do Express (ex: autenticação)
+├── middlewares/   # Middlewares do Type-GraphQL (ex: autenticação)
 ├── models/        # Definições de ObjectTypes do TypeGraphQL (Schema)
 ├── resolvers/     # Resolvers GraphQL (controladores da API)
-├── services/      # Camada de Regras de Negócio e integração com o banco
+├── use-cases/     # Camada de Regras de Negócio e Casos de Uso
 ├── utils/         # Funções utilitárias (Hash, JWT, etc.)
 ├── env.ts         # Validação de variáveis de ambiente com Zod
 └── server.ts      # Ponto de entrada da aplicação
