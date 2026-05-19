@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { NotFoundError } from '@/errors/app-error.js'
+import { CategoryInUseError, NotFoundError } from '@/errors/app-error.js'
 import { prisma } from '@/lib/prisma.js'
 
 export class DeleteCategoryUseCase {
@@ -20,6 +20,16 @@ export class DeleteCategoryUseCase {
 
     if (!category) {
       throw new NotFoundError(`Category with id ${categoryId} not found`)
+    }
+
+    const transactionCount = await prisma.transaction.count({
+      where: {
+        categoryId: validatedData.categoryId
+      }
+    })
+
+    if (transactionCount > 0) {
+      throw new CategoryInUseError()
     }
 
     await prisma.category.delete({
