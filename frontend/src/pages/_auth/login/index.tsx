@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { LinkButton } from '@/components/ui/link-button'
 import { useAuthStore } from '@/store/auth'
+import { getErrorMessage } from '@/utils/get-error-message'
 
 type LoginSearch = {
   redirect?: string
@@ -70,7 +71,7 @@ function LoginPage() {
         toast.error('Erro ao tentar fazer login')
       }
     } catch (error) {
-      toast.error('Credenciais inválidas!')
+      toast.error(getErrorMessage(error))
       console.error(error)
     } finally {
       setIsLoading(false)

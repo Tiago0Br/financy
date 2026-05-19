@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { LinkButton } from '@/components/ui/link-button'
 import { useAuthStore } from '@/store/auth'
+import { getErrorMessage } from '@/utils/get-error-message'
 
 export const Route = createFileRoute('/_auth/register/')({
   component: RegisterPage
@@ -66,7 +67,7 @@ function RegisterPage() {
         toast.error('Erro ao tentar criar conta')
       }
     } catch (error) {
-      toast.error('Ocorreu um erro ao criar sua conta.')
+      toast.error(getErrorMessage(error))
       console.error(error)
     } finally {
       setIsLoading(false)

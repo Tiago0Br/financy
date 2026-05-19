@@ -9,6 +9,7 @@ import {
 } from '@/lib/graphql/mutations/transactions'
 import { LIST_CATEGORIES } from '@/lib/graphql/queries/category'
 import { LIST_TRANSACTIONS } from '@/lib/graphql/queries/transactions'
+import { getErrorMessage } from '@/utils/get-error-message'
 import type {
   CreateTransactionFormData,
   UpdateTransactionFormData
@@ -99,8 +100,8 @@ export function useTransactionsController(initialFilters: Filters) {
       setIsModalOpen(false)
       refetch()
     },
-    onError() {
-      toast.error('Não foi possível criar a transação')
+    onError(error) {
+      toast.error(getErrorMessage(error))
     }
   })
 
@@ -113,8 +114,8 @@ export function useTransactionsController(initialFilters: Filters) {
       setIsModalOpen(false)
       refetch()
     },
-    onError() {
-      toast.error('Não foi possível atualizar a transação')
+    onError(error) {
+      toast.error(getErrorMessage(error))
     }
   })
 
@@ -127,8 +128,8 @@ export function useTransactionsController(initialFilters: Filters) {
       setIsDeleteModalOpen(false)
       refetch()
     },
-    onError() {
-      toast.error('Não foi possível remover a transação')
+    onError(error) {
+      toast.error(getErrorMessage(error))
     }
   })
 

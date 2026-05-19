@@ -7,6 +7,7 @@ import {
   UPDATE_CATEGORY
 } from '@/lib/graphql/mutations/category'
 import { LIST_CATEGORIES } from '@/lib/graphql/queries/category'
+import { getErrorMessage } from '@/utils/get-error-message'
 import type {
   CreateCategoryFormData,
   UpdateCategoryFormData
@@ -34,8 +35,8 @@ export function useCategoriesController() {
       setIsModalOpen(false)
       refetch()
     },
-    onError() {
-      toast.error('Não foi possível criar a categoria')
+    onError(error) {
+      toast.error(getErrorMessage(error))
     }
   })
 
@@ -48,8 +49,8 @@ export function useCategoriesController() {
       setIsModalOpen(false)
       refetch()
     },
-    onError() {
-      toast.error('Não foi possível atualizar a categoria')
+    onError(error) {
+      toast.error(getErrorMessage(error))
     }
   })
 
@@ -62,8 +63,8 @@ export function useCategoriesController() {
       setIsDeleteModalOpen(false)
       refetch()
     },
-    onError() {
-      toast.error('Não foi possível remover a categoria')
+    onError(error) {
+      toast.error(getErrorMessage(error))
     }
   })
 
