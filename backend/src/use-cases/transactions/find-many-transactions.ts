@@ -1,10 +1,12 @@
 import { endOfMonth, startOfMonth } from 'date-fns'
+import { Service } from 'typedi'
 import { z } from 'zod'
 import type { FindTransactionsInput } from '@/dtos/input/transaction.input.js'
 import type { PaginatedTransactions } from '@/dtos/output/transaction.output.js'
 import { prisma } from '@/lib/prisma.js'
 import { TransactionType } from '@/models/transaction.model.js'
 
+@Service()
 export class FindManyTransactionsUseCase {
   async execute(
     filters: FindTransactionsInput,

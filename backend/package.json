@@ -38,6 +38,7 @@
     "jsonwebtoken": "^9.0.3",
     "reflect-metadata": "^0.2.2",
     "type-graphql": "2.0.0-rc.3",
+    "typedi": "^0.10.0",
     "zod": "^4.3.6"
   }
 }

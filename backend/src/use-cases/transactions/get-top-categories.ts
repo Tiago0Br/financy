@@ -1,8 +1,10 @@
 import { endOfMonth, startOfMonth } from 'date-fns'
+import { Service } from 'typedi'
 import { z } from 'zod'
 import { NotFoundError } from '@/errors/app-error.js'
 import { prisma } from '@/lib/prisma.js'
 
+@Service()
 export class GetTopCategoriesUseCase {
   async execute(userId: string) {
     const schema = z.uuid()

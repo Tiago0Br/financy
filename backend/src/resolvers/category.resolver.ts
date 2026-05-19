@@ -8,6 +8,7 @@ import {
   Root,
   UseMiddleware
 } from 'type-graphql'
+import { Inject, Service } from 'typedi'
 import {
   CreateCategoryInput,
   UpdateCategoryInput
@@ -25,17 +26,30 @@ import { UpdateCategoryUseCase } from '@/use-cases/categories/update-category.js
 import { CountTransactionsByCategoryUseCase } from '@/use-cases/transactions/count-transactions-by-category.js'
 import { GetUserByIdUseCase } from '@/use-cases/users/get-user-by-id.js'
 
+@Service()
 @Resolver(() => CategoryModel)
 @UseMiddleware(IsAuth)
 export class CategoryResolver {
-  private readonly getUserByIdUseCase = new GetUserByIdUseCase()
-  private readonly createCategoryUseCase = new CreateCategoryUseCase()
-  private readonly listCategoriesUseCase = new ListCategoriesUseCase()
-  private readonly getCategoryByIdUseCase = new GetCategoryByIdUseCase()
-  private readonly updateCategoryUseCase = new UpdateCategoryUseCase()
-  private readonly deleteCategoryUseCase = new DeleteCategoryUseCase()
-  private readonly countTransactionsByCategoryUseCase =
-    new CountTransactionsByCategoryUseCase()
+  @Inject(() => GetUserByIdUseCase)
+  private readonly getUserByIdUseCase!: GetUserByIdUseCase
+
+  @Inject(() => CreateCategoryUseCase)
+  private readonly createCategoryUseCase!: CreateCategoryUseCase
+
+  @Inject(() => ListCategoriesUseCase)
+  private readonly listCategoriesUseCase!: ListCategoriesUseCase
+
+  @Inject(() => GetCategoryByIdUseCase)
+  private readonly getCategoryByIdUseCase!: GetCategoryByIdUseCase
+
+  @Inject(() => UpdateCategoryUseCase)
+  private readonly updateCategoryUseCase!: UpdateCategoryUseCase
+
+  @Inject(() => DeleteCategoryUseCase)
+  private readonly deleteCategoryUseCase!: DeleteCategoryUseCase
+
+  @Inject(() => CountTransactionsByCategoryUseCase)
+  private readonly countTransactionsByCategoryUseCase!: CountTransactionsByCategoryUseCase
 
   @Mutation(() => CategoryModel)
   async createCategory(

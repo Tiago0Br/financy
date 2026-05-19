@@ -1,8 +1,10 @@
+import { Service } from 'typedi'
 import { z } from 'zod'
 import type { UpdateTransactionInput } from '@/dtos/input/transaction.input.js'
 import { prisma } from '@/lib/prisma.js'
 import { TransactionType } from '@/models/transaction.model.js'
 
+@Service()
 export class UpdateTransactionUseCase {
   async execute(data: UpdateTransactionInput, userId: string) {
     const schema = z.object({

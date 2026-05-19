@@ -7,6 +7,7 @@ import {
   Root,
   UseMiddleware
 } from 'type-graphql'
+import { Inject, Service } from 'typedi'
 import {
   CreateTransactionInput,
   FindTransactionsInput,
@@ -34,21 +35,39 @@ import { GetTransactionByIdUseCase } from '@/use-cases/transactions/get-transact
 import { UpdateTransactionUseCase } from '@/use-cases/transactions/update-transaction.js'
 import { GetUserByIdUseCase as GetUserByIdFromUsersUseCase } from '@/use-cases/users/get-user-by-id.js'
 
+@Service()
 @Resolver(() => TransactionModel)
 @UseMiddleware(IsAuth)
 export class TransactionResolver {
-  private readonly getUserByIdUseCase = new GetUserByIdFromUsersUseCase()
-  private readonly createTransactionUseCase = new CreateTransactionUseCase()
-  private readonly findManyTransactionsUseCase =
-    new FindManyTransactionsUseCase()
-  private readonly findRecentTransactionsUseCase =
-    new FindRecentTransactionsUseCase()
-  private readonly getDashboardStatsUseCase = new GetDashboardStatsUseCase()
-  private readonly getTopCategoriesUseCase = new GetTopCategoriesUseCase()
-  private readonly getTransactionByIdUseCase = new GetTransactionByIdUseCase()
-  private readonly updateTransactionUseCase = new UpdateTransactionUseCase()
-  private readonly deleteTransactionUseCase = new DeleteTransactionUseCase()
-  private readonly getCategoryByIdUseCase = new GetCategoryByIdUseCase()
+  @Inject(() => GetUserByIdFromUsersUseCase)
+  private readonly getUserByIdUseCase!: GetUserByIdFromUsersUseCase
+
+  @Inject(() => CreateTransactionUseCase)
+  private readonly createTransactionUseCase!: CreateTransactionUseCase
+
+  @Inject(() => FindManyTransactionsUseCase)
+  private readonly findManyTransactionsUseCase!: FindManyTransactionsUseCase
+
+  @Inject(() => FindRecentTransactionsUseCase)
+  private readonly findRecentTransactionsUseCase!: FindRecentTransactionsUseCase
+
+  @Inject(() => GetDashboardStatsUseCase)
+  private readonly getDashboardStatsUseCase!: GetDashboardStatsUseCase
+
+  @Inject(() => GetTopCategoriesUseCase)
+  private readonly getTopCategoriesUseCase!: GetTopCategoriesUseCase
+
+  @Inject(() => GetTransactionByIdUseCase)
+  private readonly getTransactionByIdUseCase!: GetTransactionByIdUseCase
+
+  @Inject(() => UpdateTransactionUseCase)
+  private readonly updateTransactionUseCase!: UpdateTransactionUseCase
+
+  @Inject(() => DeleteTransactionUseCase)
+  private readonly deleteTransactionUseCase!: DeleteTransactionUseCase
+
+  @Inject(() => GetCategoryByIdUseCase)
+  private readonly getCategoryByIdUseCase!: GetCategoryByIdUseCase
 
   @Mutation(() => TransactionModel)
   async createTransaction(

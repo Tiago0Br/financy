@@ -1,7 +1,9 @@
 import { endOfMonth, startOfMonth } from 'date-fns'
+import { Service } from 'typedi'
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma.js'
 
+@Service()
 export class GetDashboardStatsUseCase {
   async execute(userId: string) {
     const schema = z.uuid()

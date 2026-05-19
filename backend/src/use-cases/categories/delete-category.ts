@@ -1,7 +1,9 @@
+import { Service } from 'typedi'
 import { z } from 'zod'
 import { CategoryInUseError, NotFoundError } from '@/errors/app-error.js'
 import { prisma } from '@/lib/prisma.js'
 
+@Service()
 export class DeleteCategoryUseCase {
   async execute(categoryId: string, userId: string) {
     const schema = z.object({

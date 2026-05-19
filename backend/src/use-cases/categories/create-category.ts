@@ -1,8 +1,10 @@
+import { Service } from 'typedi'
 import { z } from 'zod'
 import type { CreateCategoryInput } from '@/dtos/input/category.input.js'
 import { prisma } from '@/lib/prisma.js'
 import { CategoryColor } from '@/utils/types.js'
 
+@Service()
 export class CreateCategoryUseCase {
   async execute(data: CreateCategoryInput, userId: string) {
     const schema = z.object({

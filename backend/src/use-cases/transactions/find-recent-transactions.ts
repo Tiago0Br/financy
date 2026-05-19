@@ -1,6 +1,8 @@
+import { Service } from 'typedi'
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma.js'
 
+@Service()
 export class FindRecentTransactionsUseCase {
   async execute(userId: string, limit = 5) {
     const schema = z.object({

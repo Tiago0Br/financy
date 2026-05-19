@@ -4,6 +4,7 @@ import { expressMiddleware } from '@as-integrations/express5'
 import cors from 'cors'
 import express from 'express'
 import { buildSchema } from 'type-graphql'
+import { Container } from 'typedi'
 import { env } from './env.js'
 import { formatError } from './errors/format-error.js'
 import { buildContext } from './graphql/context/index.js'
@@ -27,6 +28,7 @@ const schema = await buildSchema({
     CategoryResolver,
     TransactionResolver
   ],
+  container: Container,
   validate: false,
   emitSchemaFile: './schema.graphql'
 })

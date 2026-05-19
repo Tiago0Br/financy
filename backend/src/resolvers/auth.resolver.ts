@@ -1,4 +1,5 @@
 import { Arg, Mutation, Resolver } from 'type-graphql'
+import { Inject, Service } from 'typedi'
 import {
   LoginInput,
   RefreshTokenInput,
@@ -9,17 +10,17 @@ import { LoginUseCase } from '@/use-cases/auth/login.js'
 import { RefreshTokenUseCase } from '@/use-cases/auth/refresh-token.js'
 import { RegisterUseCase } from '@/use-cases/auth/register.js'
 
+@Service()
 @Resolver()
 export class AuthResolver {
-  private readonly loginUseCase: LoginUseCase
-  private readonly registerUseCase: RegisterUseCase
-  private readonly refreshTokenUseCase: RefreshTokenUseCase
+  @Inject(() => LoginUseCase)
+  private readonly loginUseCase!: LoginUseCase
 
-  constructor() {
-    this.loginUseCase = new LoginUseCase()
-    this.registerUseCase = new RegisterUseCase()
-    this.refreshTokenUseCase = new RefreshTokenUseCase()
-  }
+  @Inject(() => RegisterUseCase)
+  private readonly registerUseCase!: RegisterUseCase
+
+  @Inject(() => RefreshTokenUseCase)
+  private readonly refreshTokenUseCase!: RefreshTokenUseCase
 
   @Mutation(() => LoginOutput)
   async login(@Arg('data', () => LoginInput) data: LoginInput) {
