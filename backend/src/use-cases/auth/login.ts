@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import type { LoginInput } from '@/dtos/input/auth.input.js'
+import { UnauthorizedError } from '@/errors/app-error.js'
 import { prisma } from '@/lib/prisma.js'
 import { comparePassword } from '@/utils/hash.js'
 import { generateToken } from '@/utils/token-generator.js'
@@ -20,13 +21,13 @@ export class LoginUseCase {
     })
 
     if (!existingUser) {
-      throw new Error('User do not exists.')
+      throw new UnauthorizedError('Credenciais inválidas.')
     }
 
     const compare = await comparePassword(password, existingUser.password ?? '')
 
     if (!compare) {
-      throw new Error('Invalid Password!')
+      throw new UnauthorizedError('Credenciais inválidas.')
     }
 
     return generateToken(existingUser)

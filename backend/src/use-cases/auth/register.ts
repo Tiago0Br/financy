@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import type { RegisterInput } from '@/dtos/input/auth.input.js'
+import { ConflictError } from '@/errors/app-error.js'
 import { prisma } from '@/lib/prisma.js'
 import { hashPassword } from '@/utils/hash.js'
 import { generateToken } from '@/utils/token-generator.js'
@@ -21,7 +22,7 @@ export class RegisterUseCase {
     })
 
     if (existingUser) {
-      throw new Error('User already exists.')
+      throw new ConflictError('User already exists.')
     }
 
     const passwordHash = await hashPassword(password)

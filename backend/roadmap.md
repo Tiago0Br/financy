@@ -28,4 +28,4 @@ Este documento descreve as etapas de desenvolvimento do backend do Financy, com 
 
 - [X] **Isolamento Global de Dados**: Revisão de segurança para garantir que todas as queries e mutations filtrem dados pelo `userId` do contexto. (1 dia)
 - [X] **Validação de Inputs**: Integrar Zod em todos os DTOs de entrada para garantir a integridade dos dados enviados pelo frontend. (1 dia)
-- [ ] **Tratamento de Erros**: Padronizar as mensagens de erro do GraphQL para facilitar o consumo pela interface. (1 dia)
+- [X] **Tratamento de Erros**: Padronizar as mensagens de erro do GraphQL para facilitar o consumo pela interface. (1 dia)

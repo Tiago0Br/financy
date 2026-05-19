@@ -1,5 +1,6 @@
 import { endOfMonth, startOfMonth } from 'date-fns'
 import { z } from 'zod'
+import { NotFoundError } from '@/errors/app-error.js'
 import { prisma } from '@/lib/prisma.js'
 
 export class GetTopCategoriesUseCase {
@@ -41,7 +42,7 @@ export class GetTopCategoriesUseCase {
       const category = categories.find((c) => c.id === data.categoryId)
 
       if (!category) {
-        throw new Error(`Category ${data.categoryId} not found`)
+        throw new NotFoundError(`Category ${data.categoryId} not found`)
       }
 
       return {

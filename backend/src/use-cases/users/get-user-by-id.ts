@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { NotFoundError } from '@/errors/app-error.js'
 import { prisma } from '@/lib/prisma.js'
 
 export class GetUserByIdUseCase {
@@ -11,7 +12,7 @@ export class GetUserByIdUseCase {
     })
 
     if (!user) {
-      throw new Error(`User with id ${id} not found.`)
+      throw new NotFoundError(`User with id ${id} not found.`)
     }
 
     return user

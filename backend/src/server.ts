@@ -5,6 +5,7 @@ import cors from 'cors'
 import express from 'express'
 import { buildSchema } from 'type-graphql'
 import { env } from './env.js'
+import { formatError } from './errors/format-error.js'
 import { buildContext } from './graphql/context/index.js'
 import { AuthResolver } from './resolvers/auth.resolver.js'
 import { CategoryResolver } from './resolvers/category.resolver.js'
@@ -31,7 +32,8 @@ const schema = await buildSchema({
 })
 
 const server = new ApolloServer({
-  schema
+  schema,
+  formatError
 })
 
 await server.start()

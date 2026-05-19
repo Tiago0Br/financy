@@ -1,4 +1,5 @@
 import type { ExpressContextFunctionArgument } from '@as-integrations/express5'
+import { UnauthorizedError } from '@/errors/app-error.js'
 import { verifyJwt } from '@/utils/jwt.js'
 
 export interface GraphqlContext {
@@ -23,7 +24,7 @@ export async function buildContext({
       const payload = verifyJwt(token)
       user = payload.id
     } catch {
-      throw new Error('Unauthorized')
+      throw new UnauthorizedError('Unauthorized')
     }
   }
 

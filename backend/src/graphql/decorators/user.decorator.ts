@@ -1,4 +1,5 @@
 import { createParameterDecorator, type ResolverData } from 'type-graphql'
+import { NotFoundError } from '@/errors/app-error.js'
 import type { User } from '@/generated/prisma/client.js'
 import { prisma } from '@/lib/prisma.js'
 import type { GraphqlContext } from '../context/index.js'
@@ -17,7 +18,7 @@ export const GqlUser = () => {
       })
 
       if (!user) {
-        throw new Error('User not found')
+        throw new NotFoundError('User not found')
       }
 
       return user

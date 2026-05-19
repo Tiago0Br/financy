@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { NotFoundError } from '@/errors/app-error.js'
 import { prisma } from '@/lib/prisma.js'
 
 export class DeleteCategoryUseCase {
@@ -18,7 +19,7 @@ export class DeleteCategoryUseCase {
     })
 
     if (!category) {
-      throw new Error(`Category with id ${categoryId} not found`)
+      throw new NotFoundError(`Category with id ${categoryId} not found`)
     }
 
     await prisma.category.delete({

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { NotFoundError } from '@/errors/app-error.js'
 import { prisma } from '@/lib/prisma.js'
 
 export class GetTransactionByIdUseCase {
@@ -18,7 +19,7 @@ export class GetTransactionByIdUseCase {
     })
 
     if (!transaction) {
-      throw new Error(`Transaction with id ${transactionId} not found`)
+      throw new NotFoundError(`Transaction with id ${transactionId} not found`)
     }
 
     return transaction
