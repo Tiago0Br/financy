@@ -11,17 +11,17 @@ export function generateToken(user: User) {
     env.TOKEN_EXPIRES_IN
   )
 
-  const refreashToken = signJwt(
+  const refreshToken = signJwt(
     {
       id: user.id,
       email: user.email
     },
-    env.REFREASH_TOKEN_EXPIRES_IN
+    env.REFRESH_TOKEN_EXPIRES_IN
   )
 
   return {
     token,
-    refreashToken,
+    refreshToken,
     user
   }
 }

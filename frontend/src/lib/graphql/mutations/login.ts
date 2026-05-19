@@ -4,7 +4,7 @@ export const LOGIN = gql`
   mutation Login($data: LoginInput!) {
     login(data: $data) {
       token
-      refreashToken
+      refreshToken
       user {
         id
         name

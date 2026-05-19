@@ -84,5 +84,5 @@ As seguintes variáveis devem ser configuradas no arquivo `.env`:
 | `DATABASE_URL`              | URL de conexão do Prisma (SQLite)           | `file:./dev.db`         |
 | `JWT_SECRET`                | Chave secreta para assinatura de tokens JWT | `sua_chave_secreta`     |
 | `TOKEN_EXPIRES_IN`          | Tempo de expiração do token de acesso       | `1d`                    |
-| `REFREASH_TOKEN_EXPIRES_IN` | Tempo de expiração do refresh token         | `7d`                    |
+| `REFRESH_TOKEN_EXPIRES_IN`  | Tempo de expiração do refresh token         | `7d`                    |
 | `FRONTEND_URL`              | URL do frontend para configuração de CORS   | `http://localhost:5173` |

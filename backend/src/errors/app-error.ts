@@ -51,7 +51,9 @@ export class ConflictError extends AppError {
 }
 
 export class CategoryInUseError extends AppError {
-  constructor(message = 'Cannot delete category with associated transactions.') {
+  constructor(
+    message = 'Cannot delete category with associated transactions.'
+  ) {
     super(message, ErrorType.CONFLICT)
   }
 }

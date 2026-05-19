@@ -7,7 +7,7 @@ export class RegisterOutput {
   token!: string
 
   @Field(() => String)
-  refreashToken!: string
+  refreshToken!: string
 
   @Field(() => UserModel)
   user?: UserModel
@@ -19,7 +19,7 @@ export class LoginOutput {
   token!: string
 
   @Field(() => String)
-  refreashToken!: string
+  refreshToken!: string
 
   @Field(() => UserModel)
   user?: UserModel

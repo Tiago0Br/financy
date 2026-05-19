@@ -8,7 +8,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string(),
   JWT_SECRET: z.string(),
   TOKEN_EXPIRES_IN: z.string().default('30m'),
-  REFREASH_TOKEN_EXPIRES_IN: z.string().default('1d'),
+  REFRESH_TOKEN_EXPIRES_IN: z.string().default('1d'),
   FRONTEND_URL: z.url()
 })
 
