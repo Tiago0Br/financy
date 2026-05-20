@@ -22,7 +22,8 @@ function DashboardPage() {
     topCategories,
     loading,
     isModalOpen,
-    setIsModalOpen
+    setIsModalOpen,
+    onSubmit
   } = useDashboardController()
 
   const formatCurrency = (value: number) => {
@@ -87,10 +88,7 @@ function DashboardPage() {
       <TransactionModal
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
-        onSubmit={(data) => {
-          console.log(data)
-          setIsModalOpen(false)
-        }}
+        onSubmit={onSubmit}
       />
     </main>
   )

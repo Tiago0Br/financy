@@ -35,10 +35,10 @@ _O núcleo da aplicação, envolvendo maior complexidade de UI e integração de
 
 _Garantir que a experiência do usuário seja fluida e segura._
 
-- [ ] **Isolamento de Dados e Permissões no Frontend** (1 dia)
+- [X] **Isolamento de Dados e Permissões no Frontend** (1 dia)
   - Garantir que o usuário visualize e gerencie apenas seus próprios dados.
   - Tratamento de erros de autorização e redirecionamento de usuários deslogados.
-- [ ] **Polimento de UI/UX (Figma Check)** (1 a 2 dias)
+- [X] **Polimento de UI/UX (Figma Check)** (1 a 2 dias)
   - Revisão final para garantir fidelidade total ao layout do Figma.
   - Implementação de feedbacks visuais (loaders, toasts de sucesso/erro).
 

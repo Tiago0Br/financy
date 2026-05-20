@@ -1,19 +1,10 @@
-import { useMutation, useQuery } from '@apollo/client/react'
+import { useQuery } from '@apollo/client/react'
 import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
-import {
-  CREATE_TRANSACTION,
-  DELETE_TRANSACTION,
-  UPDATE_TRANSACTION
-} from '@/lib/graphql/mutations/transactions'
+import { useTransactionMutations } from '@/hooks/use-transaction-mutations'
 import { LIST_CATEGORIES } from '@/lib/graphql/queries/category'
 import { LIST_TRANSACTIONS } from '@/lib/graphql/queries/transactions'
-import { getErrorMessage } from '@/utils/get-error-message'
-import type {
-  CreateTransactionFormData,
-  UpdateTransactionFormData
-} from '@/utils/schemas'
+import type { CreateTransactionFormData } from '@/utils/schemas'
 import type {
   Category,
   PaginatedTransactions,
@@ -91,47 +82,14 @@ export function useTransactionsController(initialFilters: Filters) {
     listCategories: Category[]
   }>(LIST_CATEGORIES)
 
-  const [createTransaction] = useMutation<
-    unknown,
-    { data: CreateTransactionFormData }
-  >(CREATE_TRANSACTION, {
-    onCompleted() {
-      toast.success('Transação cadastrada!')
-      setIsModalOpen(false)
-      refetch()
-    },
-    onError(error) {
-      toast.error(getErrorMessage(error))
-    }
-  })
-
-  const [updateTransaction] = useMutation<
-    unknown,
-    { data: UpdateTransactionFormData }
-  >(UPDATE_TRANSACTION, {
-    onCompleted() {
-      toast.success('Transação atualizada!')
-      setIsModalOpen(false)
-      refetch()
-    },
-    onError(error) {
-      toast.error(getErrorMessage(error))
-    }
-  })
-
-  const [deleteTransaction, { loading: isDeleting }] = useMutation<
-    unknown,
-    { id: string }
-  >(DELETE_TRANSACTION, {
-    onCompleted() {
-      toast.success('Transação removida!')
-      setIsDeleteModalOpen(false)
-      refetch()
-    },
-    onError(error) {
-      toast.error(getErrorMessage(error))
-    }
-  })
+  const { createTransaction, updateTransaction, deleteTransaction, isLoading } =
+    useTransactionMutations({
+      onSuccess() {
+        setIsModalOpen(false)
+        setIsDeleteModalOpen(false)
+        refetch()
+      }
+    })
 
   function handleOpenCreate() {
     setEditingTransaction(null)
@@ -151,11 +109,7 @@ export function useTransactionsController(initialFilters: Filters) {
   async function confirmDelete() {
     if (!transactionToDelete) return
 
-    await deleteTransaction({
-      variables: {
-        id: transactionToDelete.id
-      }
-    })
+    await deleteTransaction(transactionToDelete.id)
   }
 
   function handleChangeFilters<T extends keyof typeof filters>(
@@ -171,32 +125,11 @@ export function useTransactionsController(initialFilters: Filters) {
 
   async function onSubmit(data: CreateTransactionFormData) {
     if (editingTransaction) {
-      await updateTransaction({
-        variables: {
-          data: {
-            id: editingTransaction.id,
-            type: data.type,
-            description: data.description,
-            categoryId: data.categoryId,
-            amount: data.amount,
-            date: new Date(data.date).toISOString()
-          }
-        }
-      })
+      await updateTransaction(editingTransaction.id, data)
       return
     }
 
-    await createTransaction({
-      variables: {
-        data: {
-          type: data.type,
-          description: data.description,
-          categoryId: data.categoryId,
-          amount: data.amount,
-          date: new Date(data.date).toISOString()
-        }
-      }
-    })
+    await createTransaction(data)
   }
 
   return {
@@ -212,7 +145,7 @@ export function useTransactionsController(initialFilters: Filters) {
     setIsDeleteModalOpen,
     editingTransaction,
     transactionToDelete,
-    isDeleting,
+    isDeleting: isLoading,
     handleOpenCreate,
     handleOpenEdit,
     handleOpenDelete,
