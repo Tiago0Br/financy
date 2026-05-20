@@ -12,6 +12,8 @@ export const Route = createFileRoute('/_protected/categories/')({
 function CategoriesPage() {
   const {
     categories,
+    transactionsCount,
+    mostUsedCategory,
     loading,
     isModalOpen,
     setIsModalOpen,
@@ -45,6 +47,8 @@ function CategoriesPage() {
 
       <CategoriesSummary
         categoriesCount={categories.length}
+        transactionsCount={transactionsCount}
+        mostUsedCategory={mostUsedCategory}
         loading={loading}
       />
 

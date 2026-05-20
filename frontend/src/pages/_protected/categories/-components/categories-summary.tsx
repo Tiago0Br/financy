@@ -3,11 +3,15 @@ import { SummaryCard } from './summary-card'
 
 interface CategoriesSummaryProps {
   categoriesCount: number
+  transactionsCount: number
+  mostUsedCategory?: string
   loading: boolean
 }
 
 export function CategoriesSummary({
   categoriesCount,
+  transactionsCount,
+  mostUsedCategory,
   loading
 }: CategoriesSummaryProps) {
   return (
@@ -21,14 +25,14 @@ export function CategoriesSummary({
       />
       <SummaryCard
         icon={ArrowUpDownIcon}
-        value={27}
+        value={transactionsCount}
         label="Total de transações"
         iconClassName="text-purple-base"
         isLoading={loading}
       />
       <SummaryCard
         icon={UtensilsIcon}
-        value="Alimentação"
+        value={mostUsedCategory ?? '---'}
         label="Categoria mais utilizada"
         iconClassName="text-blue-base"
         isLoading={loading}

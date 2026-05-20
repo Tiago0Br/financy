@@ -121,8 +121,21 @@ export function useCategoriesController() {
     })
   }
 
+  const categories = data?.listCategories ?? []
+
+  const transactionsCount = categories.reduce(
+    (acc, category) => acc + category.transactionsCount,
+    0
+  )
+
+  const mostUsedCategory = [...categories].sort(
+    (a, b) => b.transactionsCount - a.transactionsCount
+  )[0]?.title
+
   return {
-    categories: data?.listCategories ?? [],
+    categories,
+    transactionsCount,
+    mostUsedCategory,
     loading,
     isModalOpen,
     setIsModalOpen,
