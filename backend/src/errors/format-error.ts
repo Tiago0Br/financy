@@ -1,7 +1,7 @@
 import { unwrapResolverError } from '@apollo/server/errors'
 import type { GraphQLFormattedError } from 'graphql'
 import { ZodError, z } from 'zod'
-import { ErrorType } from './error-types.js'
+import { ErrorType } from '@financy/shared'
 
 export const formatError = (
   formattedError: GraphQLFormattedError,

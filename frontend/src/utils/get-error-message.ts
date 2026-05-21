@@ -1,5 +1,5 @@
 import { CombinedGraphQLErrors } from '@apollo/client/errors'
-import { ErrorType } from './types'
+import { ErrorType } from '@financy/shared'
 
 /**
  * Retorna uma mensagem de erro amigável em português baseada no tipo de erro

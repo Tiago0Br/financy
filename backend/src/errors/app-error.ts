@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql'
-import { ErrorType } from './error-types.js'
+import { ErrorType } from '@financy/shared'
 
 export class AppError extends GraphQLError {
   constructor(
